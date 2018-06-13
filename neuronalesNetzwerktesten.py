@@ -18,7 +18,6 @@ na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen,
 gewichte = np.load("gewicht.npy")
 na.ge_ev = gewichte[0]
 na.ge_va = gewichte[1]
-input_liste = ...
-outputs = na.abfragen(input_liste)
-Zahl = np.argmax(outputs)
-print(Zahl)
+test_daten_liste = nk.lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 100)
+performance = na.abfragen2(test_daten_liste)
+print(performance)

@@ -8,6 +8,14 @@ import numpy as np
 import scipy
 import time
 
+#Inputs, Hidden, Outputsnodes , bias 
+
+eingabeneuronen = 784
+versteckteneuronen = 500
+ausgabeneuronen = 10
+#learnrate 
+learnrate = 0.05
+
 #Neuronales Netzwerk definieren
 class neuronalesNetzwerk:
     #neuronales Netzwerk inistialisieren
@@ -159,12 +167,6 @@ def lesen(imgf, labelf, n):
         bilddaten.append(bild)
     return bilddaten
 
-#Inputs, Hidden, Outputsnodes , bias 
 
-eingabeneuronen = 784
-versteckteneuronen = 500
-ausgabeneuronen = 10
-#learnrate 
-learnrate = 0.05
 
 
