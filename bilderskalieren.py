@@ -15,9 +15,9 @@ w, h = img.size
 print(img.size)
 if w >= h:
     x = (w-h)/2
-    img.crop((x, 0, w-x, h)).save('resized_image.jpg')
+    img.crop((x, 0, w-x, h)).save('resized_image.png')
 else:
     x=(h-w)/2
-    img.crop((0, x, w, h-x)).save('resized_image.jpg')
+    img.crop((0, x, w, h-x)).save('resized_image.png')
 #img = img.resize((basewidth, baseheight), PIL.Image.ANTIALIAS)
 #img.save('resized_image.jpg')

@@ -105,10 +105,10 @@ class neuronalesNetzwerk:
         Durchlaufe = 0
         Durchläufe = 0
          #datei öffnen lesen1
-        trainings_daten_liste = lesen("train-images.idx3-ubyte", "train-labels.idx1-ubyte", 600)
+        trainings_daten_liste = lesen("train-images.idx3-ubyte", "train-labels.idx1-ubyte", 60000)
         #datei öffnen lesen1
-        test_daten_liste = lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 100)
-        while Durchlaufe < 3:
+        test_daten_liste = lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
+        while Durchlaufe < 8:
             start = time.time()
             for i in range(len(trainings_daten_liste)):
                 daten = trainings_daten_liste[i]
@@ -162,9 +162,9 @@ def lesen(imgf, labelf, n):
 #Inputs, Hidden, Outputsnodes , bias 
 
 eingabeneuronen = 784
-versteckteneuronen = 200
+versteckteneuronen = 500
 ausgabeneuronen = 10
 #learnrate 
-learnrate = 0.1
+learnrate = 0.05
 
 
