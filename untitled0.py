@@ -1,14 +1,35 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 14 19:39:07 2018
-
-@author: Yann
-"""
-
-import cv2
+import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image
+import skimage.io
+from skimage import data
+from skimage.filters import threshold_otsu, threshold_adaptive
 
-images = np.zeros((4,784))
+img_array = skimage.io.imread('resized_image.png', flatten=True)
+print(img_array*255)
 
-gray = cv2.imread("2.png", cv2.CV_LOAD_IMAGE_GRAYSCALE)
-gray = cv2.resize(255-gray, (28, 28))
+image = img_array*255
+print(image)
+global_thresh = threshold_otsu(image)
+binary_global = image > global_thresh
+
+block_size = 35
+binary_adaptive = threshold_adaptive(image, block_size, offset=10)
+
+fig, axes = plt.subplots(nrows=3, figsize=(7, 8))
+ax0, ax1, ax2 = axes
+plt.gray()
+
+ax0.imshow(image)
+ax0.set_title('Image')
+
+ax1.imshow(binary_global)
+ax1.set_title('Global thresholding')
+
+ax2.imshow(binary_adaptive)
+ax2.set_title('Adaptive thresholding')
+
+for ax in axes:
+    ax.axis('off')
+
+plt.show()
