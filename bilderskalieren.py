@@ -12,7 +12,7 @@ import matplotlib.pyplot as plot
 baseheight = 28
 basewidth  = 28
 
-img = Image.open('1.jpg').convert('LA')
+img = Image.open('2.jpg').convert('LA')
 w, h = img.size
 print(img.size)
 if w >= h:
