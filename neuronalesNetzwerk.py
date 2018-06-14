@@ -115,15 +115,15 @@ class neuronalesNetzwerk:
             versteckte_1_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
             #Gewichte aktualisieren ge_va (Output)
             self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_5_outputs.T)
-            #Gewichte aktualisieren ge_va und ge_v5 (Output und verstecktes Layer 5)
+            #Gewichte aktualisieren ge_v5 (verstecktes Layer 5)
             self.ge_v5 += self.lr * np.dot(versteckte_5_fehler * versteckte_5_outputs * (1-versteckte_5_outputs), versteckte_4_outputs.T) 
-            #Gewichte aktualisieren ge_va, ge_v5 und ge_v4 (Output und verstecktes Layer 5 und 4)
+            #Gewichte aktualisieren ge_v4 (verstecktes Layer 4)
             self.ge_v4 += self.lr * np.dot(versteckte_4_fehler * versteckte_4_outputs * (1-versteckte_4_outputs), versteckte_3_outputs.T)
-            #Gewichte aktualisieren ge_va, ge_v5, ge_v4 und ge_v3 (Output und verstecktes Layer 5)
+            #Gewichte aktualisieren ge_v3 (verstecktes Layer 3)
             self.ge_v3 += self.lr * np.dot(versteckte_3_fehler * versteckte_3_outputs * (1-versteckte_3_outputs), versteckte_2_outputs.T)
-            #Gewichte aktualisieren ge_va und ge_v5 (Output und verstecktes Layer 5)
+            #Gewichte aktualisieren ge_v2 (verstecktes Layer 2)
             self.ge_v2 += self.lr * np.dot(versteckte_2_fehler * versteckte_2_outputs * (1-versteckte_2_outputs), versteckte_1_outputs.T)
-            #Gewichte aktualisieren ge_va und ge_v5 (Output und verstecktes Layer 5)
+            #Gewichte aktualisieren ge_v1 (verstecktes Layer 1)
             self.ge_v1 += self.lr * np.dot(versteckte_1_fehler * versteckte_1_outputs * (1-versteckte_1_outputs), inputs.T)
             pass
         
@@ -140,16 +140,36 @@ class neuronalesNetzwerk:
     def abfragen(self, inputs_list):
         #Inputsliste nehmen und transformieren damit sie hoch steht
         inputs = np.array(inputs_list, ndmin=2).T
-        #Inputs mal Gewicht
-        versteckte_inputs = np.dot(self.ge_v1, inputs)
-        #Das ganze in die Aktivierungsfunktion
-        versteckte_outputs = self.aktivierungsfunktion(versteckte_inputs)
-        #versteckte_outputs (neues inputs) mal Gewicht
-        ausgabe_inputs = np.dot(self.ge_va, versteckte_outputs)
-        #Das ganze in die Aktivierungsfunktion
-        ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
         
-        return ausgabe_outputs
+        if self.vlayer == 0:
+            ausgabe_inputs = np.dot(self.ge_va, inputs)
+            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+            
+            return ausgabe_outputs
+        if self.vlayer == 1:    
+           
+            #Inputs mal Gewicht
+            versteckte_inputs = np.dot(self.ge_v1, inputs)
+            #Das ganze in die Aktivierungsfunktion
+            versteckte_outputs = self.aktivierungsfunktion(versteckte_inputs)
+            #versteckte_outputs (neues inputs) mal Gewicht
+            ausgabe_inputs = np.dot(self.ge_va, versteckte_outputs)
+            #Das ganze in die Aktivierungsfunktion
+            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+        
+            return ausgabe_outputs
+        
+        if self.vlayer == 5:
+            
+            versteckte_1_outputs = self.aktivierungsfunktion(np.dot(self.ge_v1, inputs))
+            versteckte_2_outputs = self.aktivierungsfunktion(np.dot(self.ge_v2, versteckte_1_outputs))
+            versteckte_3_outputs = self.aktivierungsfunktion(np.dot(self.ge_v3, versteckte_2_outputs))
+            versteckte_4_outputs = self.aktivierungsfunktion(np.dot(self.ge_v4, versteckte_3_outputs))
+            versteckte_5_outputs = self.aktivierungsfunktion(np.dot(self.ge_v5, versteckte_4_outputs))
+            ausgabe_outputs = self.aktivierungsfunktion(np.dot(self.ge_va, versteckte_5_outputs))
+            
+            return ausgabe_outputs
+            
     #abfragen
     def abfragen2(self, testdatenliste):
     #Performance
@@ -202,7 +222,7 @@ class neuronalesNetzwerk:
             performance = self.abfragen2(test_daten_liste)  
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
-                best_ge = np.array([self.ge_v1, self.ge_va])
+                best_ge = np.array([self.ge_v1, self.ge_v2, self.ge_v3, self.ge_v4, self.ge_v5, self.ge_va])
                 np.save("gewicht.npy", best_ge)
                 Durchlaufe = 0
                 #beste Gewichte     
