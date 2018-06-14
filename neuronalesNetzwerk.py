@@ -5,8 +5,9 @@ Created on Sun Jun 10 18:16:22 2018
 @author: Yann
 """
 import numpy as np
-import scipy
+import scipy.special
 import time
+import sys
 
 #Inputs, Hidden, Outputsnodes , bias 
 
@@ -16,6 +17,7 @@ ausgabeneuronen = 10
 verstecktelayers = 2
 #learnrate 
 learnrate = 0.05
+
 
 #Neuronales Netzwerk definieren
 class neuronalesNetzwerk:
@@ -126,7 +128,8 @@ class neuronalesNetzwerk:
             pass
         
         else:
-            print ("Error: Anzahl versteckter Layers ungültig")
+            sys.exit("Error: Anzahl versteckter Layers ungültig")
+            
             
     
             
@@ -237,5 +240,6 @@ def lesen(imgf, labelf, n):
     return bilddaten
 
 
-
-
+if __name__ == "__main__":
+    n = neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
+    n.trainieren2()
