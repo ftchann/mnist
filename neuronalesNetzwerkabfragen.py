@@ -13,7 +13,7 @@ ausgabeneuronen = nk.ausgabeneuronen
 #learnrate 
 learnrate = nk.learnrate
 
-na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate)
+na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate,)
    
 gewichte = np.load("gewicht.npy")
 na.ge_v1 = gewichte[0]

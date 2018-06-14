@@ -14,7 +14,7 @@ import sys
 eingabeneuronen = 784
 versteckteneuronen = 500
 ausgabeneuronen = 10
-verstecktelayers = 2
+verstecktelayers = 0
 #learnrate 
 learnrate = 0.05
 
@@ -31,14 +31,19 @@ class neuronalesNetzwerk:
         #Grösse der Gewichtungsmatrix ist bei Geingave_versteckt versteckteneuron mal eingabeneuron und bei Gversteckt_ausgabe ausgabeneuron mal verstecktenodes.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Anfangszahlen zwischen +- hiddnennodes hoch -0.5 
         #Gewichte Verstekt Ausgabe
-        self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.vneuron))
+        if self.vlayer == 0:
+            self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.eneuron))
+            
+        if self.vlayer > 0:
+            self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.vneuron))
+            
         #Gewichte Hiddenlayer 1 - 5
         #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen
         self.ge_v1 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
-        self.ge_v2 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
-        self.ge_v3 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
-        self.ge_v4 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
-        self.ge_v5 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
+        self.ge_v2 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
+        self.ge_v3 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
+        self.ge_v4 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
+        self.ge_v5 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
         #Learnrate
         self.lr = learnrate
         #Sigmoid
@@ -236,6 +241,7 @@ class neuronalesNetzwerk:
             print("Durchläufe:", Durchläufe)
             print("Zeit:", end-start)
             print("bestperformance:", bestperformance)
+            print(best_ge)
         pass
     pass
 

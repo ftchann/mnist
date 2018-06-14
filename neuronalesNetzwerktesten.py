@@ -10,10 +10,11 @@ import neuronalesNetzwerk as nk
 eingabeneuronen = nk.eingabeneuronen
 versteckteneuronen = nk.versteckteneuronen
 ausgabeneuronen = nk.ausgabeneuronen
+verstecktelayers = nk.verstecktelayers
 #learnrate 
 learnrate = nk.learnrate
 #Neuronales Netzwerk erstellen
-na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate)
+na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
 #Gewichte laden   
 gewichte = np.load("gewicht.npy")
 na.ge_v1 = gewichte[0]
