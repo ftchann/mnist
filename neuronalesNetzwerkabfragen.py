@@ -13,11 +13,15 @@ ausgabeneuronen = nk.ausgabeneuronen
 #learnrate 
 learnrate = nk.learnrate
 
-na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate)
+na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate,)
    
 gewichte = np.load("gewicht.npy")
-na.ge_ev = gewichte[0]
-na.ge_va = gewichte[1]
+na.ge_v1 = gewichte[0]
+na.ge_v2 = gewichte[1]
+na.ge_v3 = gewichte[2]
+na.ge_v4 = gewichte[3]
+na.ge_v5 = gewichte[4]
+na.ge_va = gewichte[5]
 input_liste = bs.img_data
 print(input_liste)
 outputs = na.abfragen(input_liste)
