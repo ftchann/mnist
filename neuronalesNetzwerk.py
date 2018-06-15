@@ -70,7 +70,7 @@ class neuronalesNetzwerk:
             self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), inputs.T)
             pass
         
-        if self.vlayer == 1: 
+        elif self.vlayer == 1: 
             #Inputs mal Gewicht
             versteckte_inputs = np.dot(self.ge_v1, inputs)
             #Das ganze in die Aktivierungsfunktion
@@ -92,7 +92,7 @@ class neuronalesNetzwerk:
             self.ge_v1 += self.lr * np.dot(versteckte_fehler * versteckte_outputs * (1-versteckte_outputs), inputs.T)                     
             pass
         
-        if self.vlayer == 5:
+        elif self.vlayer == 5:
             #Verstecktes Layer 1
             versteckte_1_inputs = np.dot(self.ge_v1, inputs)
             versteckte_1_outputs = self.aktivierungsfunktion(versteckte_1_inputs)
