@@ -61,13 +61,36 @@ plot.imshow(img_array2, cmap='gray')
 def Schwerpunkt(image):
     #Diese Funktion dient zum  bestimmen des Schwerpunkts des Bildes
     indices = np.indices((np.shape(image)))
-    print (indices)
-    
+    #multipliziert die Werte in der Bildmatrix mit ihrem jewweiligen x-Achsenabschnitt und teilt die Summe davon mit der Summe aller Werte der Matrix
     x = (np.sum(image * indices[1])) / np.sum(image)
     y = (np.sum(image * indices[0])) / np.sum(image)
-    
+    return x,y
 
-Schwerpunkt(image)
+def MaxAbstand(image):
+    mabstand = 0
+    Sx, Sy = Schwerpunkt(image)
+    for j in range (np.shape(image)[1]):
+        for i in range (np.shape(image)[0]):
+            #Geht durch Zeilen und Spalten der Matrix und berechnet den Abstand, falls der Matrixwert grösser als 0 ist
+            if image[i, j] > 0:
+                dx = i - Sx
+                dy = j - Sy
+                abstand = dx ** 2 + dy ** 2
+                #Wenn der neue Abstand grösser als der bisherige Abstand ist, wird der alte Abstand überschrieben
+                if abstand > mabstand: 
+                    mabstand = abstand
+            else:
+                pass
+            
+    return mabstand
+            
+                    
+                
+                
+
+        
+   
+print(MaxAbstand(img_array2))
 
 
 

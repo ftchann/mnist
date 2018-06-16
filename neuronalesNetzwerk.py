@@ -15,6 +15,7 @@ eingabeneuronen = 784
 versteckteneuronen = 500
 ausgabeneuronen = 10
 verstecktelayers = 5
+
 #learnrate 
 learnrate = 0.05
 
@@ -38,12 +39,22 @@ class neuronalesNetzwerk:
             self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.vneuron))
             
         #Gewichte Hiddenlayer 1 - 5
-        #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen
-        self.ge_v1 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers+1), -0.5),(self.vneuron*(verstecktelayers), self.eneuron))
-        self.ge_v2 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers), -0.5),(self.vneuron*(verstecktelayers-1), self.vneuron*(verstecktelayers)))
-        self.ge_v3 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-1), -0.5),(self.vneuron*(verstecktelayers-2), self.vneuron*(verstecktelayers-1)))
-        self.ge_v4 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-2), -0.5),(self.vneuron*(verstecktelayers-3), self.vneuron*(verstecktelayers-2)))
-        self.ge_v5 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-3), -0.5),(self.vneuron*(verstecktelayers-4), self.vneuron*(verstecktelayers-3)))
+        #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen <- Stimmt nicht
+        if self.vlayer >= 1:
+            self.ge_v1 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers+1), -0.5),(self.vneuron*(verstecktelayers), self.eneuron))
+        
+        if self.vlayer >= 2:
+            self.ge_v2 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers), -0.5),(self.vneuron*(verstecktelayers-1), self.vneuron*(verstecktelayers)))
+            
+        if self.vlayer >= 3:
+            self.ge_v3 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-1), -0.5),(self.vneuron*(verstecktelayers-2), self.vneuron*(verstecktelayers-1)))
+            
+        if self.vlayer >= 4:
+            self.ge_v4 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-2), -0.5),(self.vneuron*(verstecktelayers-3), self.vneuron*(verstecktelayers-2)))
+            
+        if self.vlayer >= 5:
+            self.ge_v5 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-3), -0.5),(self.vneuron*(verstecktelayers-4), self.vneuron*(verstecktelayers-3)))
+            
         #Learnrate
         self.lr = learnrate
         #Sigmoid
@@ -138,9 +149,6 @@ class neuronalesNetzwerk:
             
             
     
-            
-            
-            
             
     #neuronales Netzwerk abfragen
     def abfragen(self, inputs_list):
