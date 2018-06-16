@@ -10,7 +10,7 @@ import neuronalesNetzwerk as nk
 eingabeneuronen = nk.eingabeneuronen
 versteckteneuronen = nk.versteckteneuronen
 ausgabeneuronen = nk.ausgabeneuronen
-verstecktelayer = nk.verstecktelayers
+verstecktelayers = nk.verstecktelayers
 #learnrate 
 learnrate = nk.learnrate
 

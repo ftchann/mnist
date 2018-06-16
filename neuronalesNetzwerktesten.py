@@ -6,7 +6,7 @@ Created on Wed Jun 13 01:37:18 2018
 """
 import numpy as np
 import neuronalesNetzwerk as nk
- 
+
 eingabeneuronen = nk.eingabeneuronen
 versteckteneuronen = nk.versteckteneuronen
 ausgabeneuronen = nk.ausgabeneuronen
@@ -16,7 +16,8 @@ learnrate = nk.learnrate
 #Neuronales Netzwerk erstellen
 na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
 #Gewichte laden   
-gewichte = np.load("bestgewicht.npy")
+gewichte = np.load("gewicht.npy")
+print(gewichte)
 na.ge_v1 = gewichte[0]
 na.ge_v2 = gewichte[1]
 na.ge_v3 = gewichte[2]
