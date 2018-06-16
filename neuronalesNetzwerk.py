@@ -12,7 +12,7 @@ import sys
 #Inputs, Hidden, Outputsnodes , bias 
 
 eingabeneuronen = 784
-versteckteneuronen = 500
+versteckteneuronen = 200
 ausgabeneuronen = 10
 verstecktelayers = 5
 #learnrate 
@@ -71,6 +71,7 @@ class neuronalesNetzwerk:
             pass
         
         elif self.vlayer == 1: 
+            print(np.shape(self.ge_va))
             #Inputs mal Gewicht
             versteckte_inputs = np.dot(self.ge_v1, inputs)
             #Das ganze in die Aktivierungsfunktion
@@ -110,14 +111,14 @@ class neuronalesNetzwerk:
             versteckte_5_outputs = self.aktivierungsfunktion(versteckte_5_inputs)  
             #Ausgabe Layer
             ausgabe_inputs = np.dot(self.ge_va, versteckte_5_outputs)
-            ausgabe_outputs = self.aktivierungsfunktion(versteckte_5_inputs)
+            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
             
             ausgabe_fehler = ziele - ausgabe_outputs
             versteckte_5_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
-            versteckte_4_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
-            versteckte_3_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
-            versteckte_2_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
-            versteckte_1_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
+            versteckte_4_fehler = np.dot(self.ge_v5.T, versteckte_5_fehler)
+            versteckte_3_fehler = np.dot(self.ge_v4.T, versteckte_4_fehler)
+            versteckte_2_fehler = np.dot(self.ge_v3.T, versteckte_3_fehler)
+            versteckte_1_fehler = np.dot(self.ge_v2.T, versteckte_2_fehler)
             #Gewichte aktualisieren ge_va (Output)
             self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_5_outputs.T)
             #Gewichte aktualisieren ge_v5 (verstecktes Layer 5)
