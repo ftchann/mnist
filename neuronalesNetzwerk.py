@@ -14,7 +14,7 @@ import sys
 eingabeneuronen = 784
 versteckteneuronen = 500
 ausgabeneuronen = 10
-verstecktelayers = 0
+verstecktelayers = 1
 #learnrate 
 learnrate = 0.05
 
@@ -241,7 +241,7 @@ class neuronalesNetzwerk:
             print("Durchläufe:", Durchläufe)
             print("Zeit:", end-start)
             print("bestperformance:", bestperformance)
-            print(best_ge)
+#            print(best_ge)
         pass
     pass
 

@@ -6,13 +6,13 @@ Created on Wed Jun 13 18:38:48 2018
 """
 import numpy as np
 from PIL import Image
-import skimage
+import skimage.io
 import matplotlib.pyplot as plot
 from skimage.filters import threshold_otsu, threshold_adaptive
 baseheight = 28
 basewidth  = 28
 
-img = Image.open('2.jpg').convert('LA')
+img = Image.open('IMG_20180614_102413.jpg').convert('LA')
 w, h = img.size
 print(img.size)
 if w >= h:
@@ -32,11 +32,13 @@ image= img_array*255
 #Treshholding
 global_thresh = threshold_otsu(image)
 binary_global = image > global_thresh
-print(binary_global)
+
 ##show image
 plot.imshow(binary_global)
 img_array = 1-np.int32(binary_global)
+img_data = img_array.reshape(784)
 print(img_array)
+
 #print(img_data)#.save(' resized_image.png')# convert image to black and white
 #img = img.resize((basewidth, baseheight), PIL.Image.ANTIALIAS)
 #img.save('resized_image.jpg')

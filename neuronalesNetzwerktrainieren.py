@@ -10,9 +10,10 @@ import neuronalesNetzwerk as nk
 eingabeneuronen = nk.eingabeneuronen
 versteckteneuronen = nk.versteckteneuronen
 ausgabeneuronen = nk.ausgabeneuronen
+verstecktelayer = nk.verstecktelayers
 #learnrate 
 learnrate = nk.learnrate
 
-n = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate)
+n = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
 
 n.trainieren2()
