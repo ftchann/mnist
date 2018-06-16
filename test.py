@@ -7,6 +7,9 @@ Created on Sat Jun 16 15:26:11 2018
 
 import numpy as np
 
-x = np.arange(10)
-z = np.zeros(10)
-print(z)
+
+print(np.indices((3,3)))
+
+
+#def schwerpunkt():
+#    print(np.indices(3,3))
