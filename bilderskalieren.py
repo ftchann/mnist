@@ -27,7 +27,7 @@ else:
     img = img.crop((0, x, w, h-x)).save('resizedimage.png')
     h=w
 ##reshape von 28x28 zu 784
-img_array = skimage.io.imread('resizedimage.png', 'L').astype(np.float32)  
+img_array = skimage.io.imread('5.jpg', 'L').astype(np.float32)  
 #Auf 255 erweitern 
 image= img_array*255
 print(image)
@@ -38,13 +38,13 @@ print(binary_global)
 ##show image
 img_array2 = 1-np.int32(binary_global)
 print(img_array2.size)
-img_data2 = skimage.transform.rescale(img_array2,1/28.5)
+#img_data2 = skimage.transform.rescale(img_array2,1/28.5)
 #print(28/w)
 #print(w)
 #print(h)
-img_data = img_data2.reshape(784)
+img_data = img_array2.reshape(784)
 #
-plot.imshow(img_data2, cmap='gray')
+plot.imshow(img_array2, cmap='gray')
 
 #print(img_array2)
 #print(img_data)
