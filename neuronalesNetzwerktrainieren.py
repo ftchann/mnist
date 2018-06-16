@@ -14,6 +14,6 @@ verstecktelayer = nk.verstecktelayers
 #learnrate 
 learnrate = nk.learnrate
 
-n = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
+n = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayer)
 
 n.trainieren2()
