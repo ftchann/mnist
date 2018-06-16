@@ -39,11 +39,11 @@ class neuronalesNetzwerk:
             
         #Gewichte Hiddenlayer 1 - 5
         #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen
-        self.ge_v1 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers+1), -0.5),(self.vneuron*(verstecktelayers+1), self.eneuron))
-        self.ge_v2 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers), -0.5),(self.vneuron*(verstecktelayers), self.vneuron*(verstecktelayers+1)))
-        self.ge_v3 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-1), -0.5),(self.vneuron*(verstecktelayers-1), self.vneuron*(verstecktelayers)))
-        self.ge_v4 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-2), -0.5),(self.vneuron*(verstecktelayers-2), self.vneuron*(verstecktelayers-1)))
-        self.ge_v5 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-3), -0.5),(self.vneuron*(verstecktelayers-3), self.vneuron*(verstecktelayers-2)))
+        self.ge_v1 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
+        self.ge_v2 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
+        self.ge_v3 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
+        self.ge_v4 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
+        self.ge_v5 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
         #Learnrate
         self.lr = learnrate
         #Sigmoid
@@ -110,7 +110,7 @@ class neuronalesNetzwerk:
             versteckte_5_outputs = self.aktivierungsfunktion(versteckte_5_inputs)  
             #Ausgabe Layer
             ausgabe_inputs = np.dot(self.ge_va, versteckte_5_outputs)
-            ausgabe_outputs = self.aktivierungsfunktion(versteckte_1_inputs)
+            ausgabe_outputs = self.aktivierungsfunktion(versteckte_5_inputs)
             
             ausgabe_fehler = ziele - ausgabe_outputs
             versteckte_5_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
