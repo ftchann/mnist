@@ -18,11 +18,11 @@ na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen,
 #Gewichte laden   
 gewichte = np.load("bestgewicht.npy")
 na.ge_v1 = gewichte[0]
-#na.ge_v2 = gewichte[1]
-#na.ge_v3 = gewichte[2]
-#na.ge_v4 = gewichte[3]
-#na.ge_v5 = gewichte[4]
-#na.ge_va = gewichte[5]
+na.ge_v2 = gewichte[1]
+na.ge_v3 = gewichte[2]
+na.ge_v4 = gewichte[3]
+na.ge_v5 = gewichte[4]
+na.ge_va = gewichte[5]
 #Testdatei§ laden
 test_daten_liste = nk.lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
 performance = na.abfragen2(test_daten_liste)

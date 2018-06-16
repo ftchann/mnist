@@ -10,12 +10,13 @@ import bilderskalieren as bs
 eingabeneuronen = nk.eingabeneuronen
 versteckteneuronen = nk.versteckteneuronen
 ausgabeneuronen = nk.ausgabeneuronen
+verstecktelayer = nk.verstecktelayers
 #learnrate 
 learnrate = nk.learnrate
 
-na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate,1)
+na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayer)
    
-gewichte = np.load("bestgewicht.npy")
+gewichte = np.load("gewicht.npy")
 na.ge_v1 = gewichte[0]
 na.ge_v2 = gewichte[1]
 na.ge_v3 = gewichte[2]
