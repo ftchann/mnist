@@ -240,7 +240,7 @@ class neuronalesNetzwerk:
             end = time.time()
             print("Durchlaufe ohne Verbesserung:",Durchlaufe)
             print("Durchläufe:", Durchläufe)
-            print("Zeit:", end-start)
+            print("Zeit in Minuten:", (end-start)/60)
             print("bestperformance:", bestperformance)
 #            print(best_ge)
         pass
