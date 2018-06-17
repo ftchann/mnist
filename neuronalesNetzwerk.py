@@ -12,12 +12,12 @@ import sys
 #Inputs, Hidden, Outputsnodes , bias 
 
 eingabeneuronen = 784
-versteckteneuronen = 500
+versteckteneuronen = 20
 ausgabeneuronen = 10
-verstecktelayers = 5
+verstecktelayers = 1
 
 #learnrate 
-learnrate = 0.05
+learnrate = 0.5
 
 
 #Neuronales Netzwerk definieren
@@ -28,6 +28,11 @@ class neuronalesNetzwerk:
         self.vneuron = verstecketeneuronen
         self.aneuron= ausgabeneuronen
         self.vlayer = verstecktelayers
+        self.ge_v2 = 0
+        self.ge_v1 = 0
+        self.ge_v3 = 0
+        self.ge_v4 = 0
+        self.ge_v5 = 0
         #Gewichtungsmatrixen definieren
         #Grösse der Gewichtungsmatrix ist bei Geingave_versteckt versteckteneuron mal eingabeneuron und bei Gversteckt_ausgabe ausgabeneuron mal verstecktenodes.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Anfangszahlen zwischen +- hiddnennodes hoch -0.5 
@@ -41,19 +46,19 @@ class neuronalesNetzwerk:
         #Gewichte Hiddenlayer 1 - 5
         #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen <- Stimmt nicht
         if self.vlayer >= 1:
-            self.ge_v1 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers+1), -0.5),(self.vneuron*(verstecktelayers), self.eneuron))
+            self.ge_v1 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.eneuron))
         
         if self.vlayer >= 2:
-            self.ge_v2 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers), -0.5),(self.vneuron*(verstecktelayers-1), self.vneuron*(verstecktelayers)))
+            self.ge_v2 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
             
         if self.vlayer >= 3:
-            self.ge_v3 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-1), -0.5),(self.vneuron*(verstecktelayers-2), self.vneuron*(verstecktelayers-1)))
+            self.ge_v3 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
             
         if self.vlayer >= 4:
-            self.ge_v4 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-2), -0.5),(self.vneuron*(verstecktelayers-3), self.vneuron*(verstecktelayers-2)))
+            self.ge_v4 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
             
         if self.vlayer >= 5:
-            self.ge_v5 = np.random.normal(0.0,pow(self.vneuron*(verstecktelayers-3), -0.5),(self.vneuron*(verstecktelayers-4), self.vneuron*(verstecktelayers-3)))
+            self.ge_v5 = np.random.normal(0.0,pow(self.vneuron, -0.5),(self.vneuron, self.vneuron))
             
         #Learnrate
         self.lr = learnrate
@@ -82,7 +87,6 @@ class neuronalesNetzwerk:
             pass
         
         elif self.vlayer == 1: 
-            print(np.shape(self.ge_va))
             #Inputs mal Gewicht
             versteckte_inputs = np.dot(self.ge_v1, inputs)
             #Das ganze in die Aktivierungsfunktion
@@ -174,13 +178,25 @@ class neuronalesNetzwerk:
             return ausgabe_outputs
         
         if self.vlayer == 5:
-            
-            versteckte_1_outputs = self.aktivierungsfunktion(np.dot(self.ge_v1, inputs))
-            versteckte_2_outputs = self.aktivierungsfunktion(np.dot(self.ge_v2, versteckte_1_outputs))
-            versteckte_3_outputs = self.aktivierungsfunktion(np.dot(self.ge_v3, versteckte_2_outputs))
-            versteckte_4_outputs = self.aktivierungsfunktion(np.dot(self.ge_v4, versteckte_3_outputs))
-            versteckte_5_outputs = self.aktivierungsfunktion(np.dot(self.ge_v5, versteckte_4_outputs))
-            ausgabe_outputs = self.aktivierungsfunktion(np.dot(self.ge_va, versteckte_5_outputs))
+                        #Verstecktes Layer 1
+            versteckte_1_inputs = np.dot(self.ge_v1, inputs)
+            versteckte_1_outputs = self.aktivierungsfunktion(versteckte_1_inputs)
+            #Verstecktes Layer 2
+            versteckte_2_inputs = np.dot(self.ge_v2, versteckte_1_outputs)
+            versteckte_2_outputs = self.aktivierungsfunktion(versteckte_2_inputs)
+            #Verstecktes Layer 3
+            versteckte_3_inputs = np.dot(self.ge_v3, versteckte_2_outputs)
+            versteckte_3_outputs = self.aktivierungsfunktion(versteckte_3_inputs)
+            #Verstecktes Layer 4
+            versteckte_4_inputs = np.dot(self.ge_v4, versteckte_3_outputs)
+            versteckte_4_outputs = self.aktivierungsfunktion(versteckte_4_inputs)
+            #Verstecktes Layer 5
+            versteckte_5_inputs = np.dot(self.ge_v5, versteckte_4_outputs)
+            versteckte_5_outputs = self.aktivierungsfunktion(versteckte_5_inputs)  
+            #Ausgabe Layer
+            ausgabe_inputs = np.dot(self.ge_va, versteckte_5_outputs)
+            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+
             
             return ausgabe_outputs
             
