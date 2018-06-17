@@ -42,7 +42,7 @@ print(binary_global)
 
 ##show image
 img_array2 = 1-np.int32(binary_global)
-print(img_array2.size)
+print(img_array2)
 #img_data2 = skimage.transform.rescale(img_array2,1/28.5)
 #print(28/w)
 #print(w)
@@ -60,14 +60,15 @@ plot.imshow(img_array2, cmap='gray')
 
 def Schwerpunkt(image):
     #Diese Funktion dient zum  bestimmen des Schwerpunkts des Bildes
-    indices = np.indices((np.shape(image)))
-    print (indices)
+    shape=np.shape(image)
+    indices = np.indices((shape))
     
     x = (np.sum(image * indices[1])) / np.sum(image)
     y = (np.sum(image * indices[0])) / np.sum(image)
-    
-
-Schwerpunkt(image)
+    schwerpunkt = np.array([x,y])
+    return schwerpunkt
+Schwerpunkt =Schwerpunkt(img_array2)
+print(Schwerpunkt) 
 
 
 
