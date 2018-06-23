@@ -64,13 +64,14 @@ def Schwerpunkt(image):
     #multipliziert die Werte in der Bildmatrix mit ihrem jewweiligen x-Achsenabschnitt und teilt die Summe davon mit der Summe aller Werte der Matrix
     x = (np.sum(image * indices[1])) / np.sum(image)
     y = (np.sum(image * indices[0])) / np.sum(image)
-    print(x,y)
     return x,y
+
 
 def MaxAbstand(Sxa, Sya, image):
     maxdxy = 0
     Sx = Sxa
     Sy = Sya
+
     for j in range (np.shape(image)[1]):
         for i in range (np.shape(image)[0]):
             #Geht durch Zeilen und Spalten der Matrix und berechnet den Abstand, falls der Matrixwert grösser als 0 ist
@@ -90,8 +91,7 @@ def MaxAbstand(Sxa, Sya, image):
             
 
 Sx, Sy = Schwerpunkt(img_array2)
-
-MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)   
+MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)
 OberY = int(Sy - MaxAbstand2)
 UnterY = int(Sy + MaxAbstand2)
 LinksX = int(Sx - MaxAbstand2)
@@ -100,4 +100,4 @@ format_img = img_array2[OberY:UnterY, LinksX:RechtsX]
 print(Sx,Sy)
 print(MaxAbstand2)
 
-plot.imshow(format_img, cmap='gray')
+
