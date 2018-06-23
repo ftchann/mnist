@@ -101,11 +101,10 @@ format_img = img_array2[OberY+1:UnterY+1, LinksX+1:RechtsX+1]
 print(Sx,Sy)
 print(MaxAbstand2)
 
-<<<<<<< HEAD
+
 format_img_rescale = skimage.transform.rescale(format_img,1/28.5)
 plot.imshow(format_img_rescale, cmap='gray')
-=======
-plot.imshow(format_img, cmap='gray')
+
+plot.imshow(format_img_rescale, cmap='gray')
 
 
->>>>>>> e180994738b9424861b0b6dfc2343041d6f8e871
