@@ -31,17 +31,18 @@ basewidth  = 28
 img_array = skimage.io.imread('1.jpg', 'L').astype(np.float32)  
 #Auf 255 erweitern 
 image= img_array*255
-print(image)
+#print(image)
 #Treshholding
 global_thresh = threshold_otsu(image)
 binary_global = image > global_thresh
-print(binary_global)
+#print(binary_global)
 
 
 
 ##show image
 img_array2 = 1-np.int32(binary_global)
 print(img_array2.size)
+print(img_array2)
 #img_data2 = skimage.transform.rescale(img_array2,1/28.5)
 #print(28/w)
 #print(w)
@@ -66,9 +67,10 @@ def Schwerpunkt(image):
     print(x,y)
     return x,y
 
-def MaxAbstand(image):
+def MaxAbstand(Sxa, Sya):
     maxdxy = 0
-    Sx, Sy = Schwerpunkt(image)
+    Sx = Sxa
+    Sy = Sya
     for j in range (np.shape(image)[1]):
         for i in range (np.shape(image)[0]):
             #Geht durch Zeilen und Spalten der Matrix und berechnet den Abstand, falls der Matrixwert grösser als 0 ist
@@ -86,11 +88,8 @@ def MaxAbstand(image):
             
     return maxdxy
             
-                    
-                
-                
 
-        
-   
-print(MaxAbstand(img_array2))
-    
+Sx, Sy = Schwerpunkt(img_array2)
+
+MaxAbstand = MaxAbstand(Sx, Sy)   
+print(MaxAbstand)
