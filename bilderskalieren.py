@@ -49,7 +49,7 @@ print(img_array2)
 #print(h)
 #img_data = img_array2.reshape(784)
 #
-plot.imshow(img_array2, cmap='gray')
+
 
 #print(img_array2)
 #print(img_data)
@@ -96,8 +96,9 @@ OberY = int(Sy - MaxAbstand2)
 UnterY = int(Sy + MaxAbstand2)
 LinksX = int(Sx - MaxAbstand2)
 RechtsX = int(Sx + MaxAbstand2)
-format_img = img_array2[OberY:UnterY, LinksX:RechtsX]
+format_img = img_array2[OberY+1:UnterY+1, LinksX+1:RechtsX+1]
 print(Sx,Sy)
 print(MaxAbstand2)
 
-
+format_img_rescale = skimage.transform.rescale(format_img,1/28.5)
+plot.imshow(format_img_rescale, cmap='gray')
