@@ -100,9 +100,11 @@ RechtsX = int(Sx + MaxAbstand2)
 format_img = img_array2[OberY+1:UnterY+1, LinksX+1:RechtsX+1]
 print(Sx,Sy)
 print(MaxAbstand2)
+shape_format_img = np.shape(format_img)
 
+print(shape_format_img[0])
 
-format_img_rescale = skimage.transform.rescale(format_img,1/28.5)
+format_img_rescale = skimage.transform.rescale(format_img,20/shape_format_img[0])
 plot.imshow(format_img_rescale, cmap='gray')
 
 plot.imshow(format_img_rescale, cmap='gray')
