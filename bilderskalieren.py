@@ -107,6 +107,4 @@ print(shape_format_img[0])
 format_img_rescale = skimage.transform.rescale(format_img,20/shape_format_img[0])
 plot.imshow(format_img_rescale, cmap='gray')
 
-plot.imshow(format_img_rescale, cmap='gray')
-
 
