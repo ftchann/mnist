@@ -92,6 +92,7 @@ def MaxAbstand(Sxa, Sya, image):
 
 Sx, Sy = Schwerpunkt(img_array2)
 MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)
+
 OberY = int(Sy - MaxAbstand2)
 UnterY = int(Sy + MaxAbstand2)
 LinksX = int(Sx - MaxAbstand2)
@@ -99,5 +100,7 @@ RechtsX = int(Sx + MaxAbstand2)
 format_img = img_array2[OberY:UnterY, LinksX:RechtsX]
 print(Sx,Sy)
 print(MaxAbstand2)
+
+plot.imshow(format_img, cmap='gray')
 
 
