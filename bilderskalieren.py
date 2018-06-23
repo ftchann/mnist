@@ -67,17 +67,18 @@ def Schwerpunkt(image):
     print(x,y)
     return x,y
 
-def MaxAbstand(Sxa, Sya):
+def MaxAbstand(Sxa, Sya, image):
     maxdxy = 0
     Sx = Sxa
     Sy = Sya
+    
     for j in range (np.shape(image)[1]):
         for i in range (np.shape(image)[0]):
             #Geht durch Zeilen und Spalten der Matrix und berechnet den Abstand, falls der Matrixwert grösser als 0 ist
             if image[i, j] > 0:
-                dx = i - Sx
-                dy = j - Sy
-                abstand = dx ** 2 + dy ** 2
+                dx = abs(i - Sx)
+                dy = abs(j - Sy)
+                #abstand = dx ** 2 + dy ** 2
                 #Wenn der neue Abstand grösser als der bisherige Abstand ist, wird der alte Abstand überschrieben
                 if dx > maxdxy: 
                     maxdxy = dx
@@ -91,5 +92,5 @@ def MaxAbstand(Sxa, Sya):
 
 Sx, Sy = Schwerpunkt(img_array2)
 
-MaxAbstand = MaxAbstand(Sx, Sy)   
-print(MaxAbstand)
+MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)   
+print(MaxAbstand2)
