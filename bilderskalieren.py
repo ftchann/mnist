@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Jun 13 18:38:48 2018
-
 @author: Yann
 """
 import numpy as np
@@ -42,7 +41,7 @@ print(binary_global)
 
 ##show image
 img_array2 = 1-np.int32(binary_global)
-print(img_array2)
+print(img_array2.size)
 #img_data2 = skimage.transform.rescale(img_array2,1/28.5)
 #print(28/w)
 #print(w)
@@ -60,17 +59,6 @@ plot.imshow(img_array2, cmap='gray')
 
 def Schwerpunkt(image):
     #Diese Funktion dient zum  bestimmen des Schwerpunkts des Bildes
-<<<<<<< HEAD
-    shape=np.shape(image)
-    indices = np.indices((shape))
-    
-    x = (np.sum(image * indices[1])) / np.sum(image)
-    y = (np.sum(image * indices[0])) / np.sum(image)
-    schwerpunkt = np.array([x,y])
-    return schwerpunkt
-Schwerpunkt =Schwerpunkt(img_array2)
-print(Schwerpunkt) 
-=======
     indices = np.indices((np.shape(image)))
     #multipliziert die Werte in der Bildmatrix mit ihrem jewweiligen x-Achsenabschnitt und teilt die Summe davon mit der Summe aller Werte der Matrix
     x = (np.sum(image * indices[1])) / np.sum(image)
@@ -101,12 +89,8 @@ def MaxAbstand(image):
                     
                 
                 
->>>>>>> 6b036c8c0ba12e9769716a74b4f8cb7647aedb1a
 
         
    
 print(MaxAbstand(img_array2))
     
-
-
-
