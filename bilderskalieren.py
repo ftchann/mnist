@@ -28,10 +28,12 @@ basewidth  = 28
 #    img = img.crop((0, x, w, h-x)).save('resizedimage.png')
 #    h=w
 #reshape von 28x28 zu 784
-img_array = skimage.io.imread('1.jpg', 'L').astype(np.float32)  
+img_array = skimage.io.imread('1.jpg', 'L').astype(np.float32) 
+print(img_array) 
 #Auf 255 erweitern 
 image= img_array*255
-#print(image)
+
+
 #Treshholding
 global_thresh = threshold_otsu(image)
 binary_global = image > global_thresh
@@ -40,23 +42,7 @@ binary_global = image > global_thresh
 
 
 ##show image
-img_array2 = 1-np.int32(binary_global)
-#print(img_array2.size)
-#print(img_array2)
-#img_data2 = skimage.transform.rescale(img_array2,1/28.5)
-#print(28/w)
-#print(w)
-#print(h)
-#img_data = img_array2.reshape(784)
-#
-
-
-#print(img_array2)
-#print(img_data)
-
-#print(img_data)#.save(' resized_image.png')# convert image to black and white
-#img = img.resize((basewidth, baseheight), PIL.Image.ANTIALIAS)
-#img.save('resized_image.jpg')
+img_array2 = abs(1-np.int32(binary_global))
 
 def Schwerpunkt(image):
     #Diese Funktion dient zum  bestimmen des Schwerpunkts des Bildes
@@ -99,15 +85,20 @@ LinksX = int(Sx - MaxAbstand2)
 RechtsX = int(Sx + MaxAbstand2)
 format_img = img_array2[OberY+1:UnterY+1, LinksX+1:RechtsX+1]
 print(format_img)
+
 #print(Sx,Sy)
 #print(MaxAbstand2)
 shape_format_img = np.shape(format_img)
 
 #print(shape_format_img[0])
 
-format_img_rescale = skimage.transform.rescale(format_img,20/shape_format_img[0])
+format_img_rescale = skimage.transform.rescale(format_img*255,20/shape_format_img[0])
+
+
 img_final = np.pad(format_img_rescale, 4,'constant', constant_values=(0))
-#print(format_img_rescale)
+
+#print(img_final)
 plot.imshow(img_final, cmap='gray')
 
-
+img_final= img_final / img_final[15][15]
+print(img_final)
