@@ -41,8 +41,8 @@ binary_global = image > global_thresh
 
 ##show image
 img_array2 = 1-np.int32(binary_global)
-print(img_array2.size)
-print(img_array2)
+#print(img_array2.size)
+#print(img_array2)
 #img_data2 = skimage.transform.rescale(img_array2,1/28.5)
 #print(28/w)
 #print(w)
@@ -98,13 +98,16 @@ UnterY = int(Sy + MaxAbstand2)
 LinksX = int(Sx - MaxAbstand2)
 RechtsX = int(Sx + MaxAbstand2)
 format_img = img_array2[OberY+1:UnterY+1, LinksX+1:RechtsX+1]
-print(Sx,Sy)
-print(MaxAbstand2)
+print(format_img)
+#print(Sx,Sy)
+#print(MaxAbstand2)
 shape_format_img = np.shape(format_img)
 
-print(shape_format_img[0])
+#print(shape_format_img[0])
 
 format_img_rescale = skimage.transform.rescale(format_img,20/shape_format_img[0])
-plot.imshow(format_img_rescale, cmap='gray')
+img_final = np.pad(format_img_rescale, 4,'constant', constant_values=(0))
+#print(format_img_rescale)
+plot.imshow(img_final, cmap='gray')
 
 
