@@ -14,7 +14,7 @@ import sys
 eingabeneuronen = 784
 versteckteneuronen = 20
 ausgabeneuronen = 10
-verstecktelayers = 1
+verstecktelayers = 5
 
 #learnrate 
 learnrate = 0.5
@@ -25,21 +25,13 @@ class neuronalesNetzwerk:
     #neuronales Netzwerk inistialisieren
     def __init__(self, eingabeneuronen, verstecketeneuronen, ausgabeneuronen, learnrate, verstecktelayers):
         self.eneuron = eingabeneuronen
-        self.vneuron = verstecketeneuronen
+        self.vneuron5 = verstecketeneuronen
         self.aneuron= ausgabeneuronen
         self.vlayer = verstecktelayers
-        self.vneuron1 = self.vneuron*verstecktelayers
-        print(self.vneuron1)
-        self.vneuron2 = self.vneuron*(verstecktelayers-1)
-        self.vneuron3 = self.vneuron*(verstecktelayers-2)
-        self.vneuron4 = self.vneuron*(verstecktelayers-3)
-        self.vneuron5 = self.vneuron*(verstecktelayers-4)
-        print(self.vneuron5)
-        self.ge_v2 = 0
-        self.ge_v1 = 0
-        self.ge_v3 = 0
-        self.ge_v4 = 0
-        self.ge_v5 = 0
+        self.vneuron1 = self.vneuron5*verstecktelayers
+        self.vneuron2 = self.vneuron5*(verstecktelayers-1)
+        self.vneuron3 = self.vneuron5*(verstecktelayers-2)
+        self.vneuron4 = self.vneuron5*(verstecktelayers-3)
         #Gewichtungsmatrixen definieren
         #Grösse der Gewichtungsmatrix ist bei Geingave_versteckt versteckteneuron mal eingabeneuron und bei Gversteckt_ausgabe ausgabeneuron mal verstecktenodes.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Anfangszahlen zwischen +- hiddnennodes hoch -0.5 
@@ -48,7 +40,7 @@ class neuronalesNetzwerk:
             self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.eneuron))
             
         if self.vlayer > 0:
-            self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.vneuron))
+            self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.vneuron5))
             
         #Gewichte Hiddenlayer 1 - 5
         #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen <- Stimmt nicht
@@ -66,9 +58,6 @@ class neuronalesNetzwerk:
             
         if self.vlayer >= 5:
             self.ge_v5 = np.random.normal(0.0,pow(self.vneuron5, -0.5),(self.vneuron5, self.vneuron4))
-        print(np.shape(self.ge_va))
-        print(np.shape(self.ge_v5))
-        print(np.shape(self.ge_v1))
         #Learnrate
         self.lr = learnrate
         #Sigmoid
@@ -94,7 +83,6 @@ class neuronalesNetzwerk:
             ausgabe_fehler = ziele - ausgabe_outputs
             self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), inputs.T)
             pass
-        
         elif self.vlayer == 1: 
             #Inputs mal Gewicht
             versteckte_inputs = np.dot(self.ge_v1, inputs)
@@ -110,7 +98,6 @@ class neuronalesNetzwerk:
             ausgabe_fehler = ziele - ausgabe_outputs
             #verstecktefehler (Output mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
             versteckte_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
-        
             #Gewichte aktuallisieren hidden output
             self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_outputs.T)
             #Gewichte aktuallisieren hidden und output                            
@@ -144,21 +131,18 @@ class neuronalesNetzwerk:
             versteckte_2_fehler = np.dot(self.ge_v3.T, versteckte_3_fehler)
             versteckte_1_fehler = np.dot(self.ge_v2.T, versteckte_2_fehler)
             #Gewichte aktualisieren ge_va (Output)
-            a=self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_5_outputs.T)
-            b=self.lr * np.dot(versteckte_5_fehler * versteckte_5_outputs * (1-versteckte_5_outputs), versteckte_4_outputs.T)
-            c= self.lr * np.dot(versteckte_1_fehler * versteckte_1_outputs * (1-versteckte_1_outputs), inputs.T)
-            sys.exit
-            self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_5_outputs.T)
+
+            self.ge_va += self.lr * np.dot((ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs)), versteckte_5_outputs.T)
             #Gewichte aktualisieren ge_v5 (verstecktes Layer 5)
-            self.ge_v5 += self.lr * np.dot(versteckte_5_fehler * versteckte_5_outputs * (1-versteckte_5_outputs), versteckte_4_outputs.T) 
+            self.ge_v5 += self.lr * np.dot((versteckte_5_fehler * versteckte_5_outputs * (1-versteckte_5_outputs)), versteckte_4_outputs.T) 
             #Gewichte aktualisieren ge_v4 (verstecktes Layer 4)
-            self.ge_v4 += self.lr * np.dot(versteckte_4_fehler * versteckte_4_outputs * (1-versteckte_4_outputs), versteckte_3_outputs.T)
+            self.ge_v4 += self.lr * np.dot((versteckte_4_fehler * versteckte_4_outputs * (1-versteckte_4_outputs)), versteckte_3_outputs.T)
             #Gewichte aktualisieren ge_v3 (verstecktes Layer 3)
-            self.ge_v3 += self.lr * np.dot(versteckte_3_fehler * versteckte_3_outputs * (1-versteckte_3_outputs), versteckte_2_outputs.T)
+            self.ge_v3 += self.lr * np.dot((versteckte_3_fehler * versteckte_3_outputs * (1-versteckte_3_outputs)), versteckte_2_outputs.T)
             #Gewichte aktualisieren ge_v2 (verstecktes Layer 2)
-            self.ge_v2 += self.lr * np.dot(versteckte_2_fehler * versteckte_2_outputs * (1-versteckte_2_outputs), versteckte_1_outputs.T)
+            self.ge_v2 += self.lr * np.dot((versteckte_2_fehler * versteckte_2_outputs * (1-versteckte_2_outputs)), versteckte_1_outputs.T)
             #Gewichte aktualisieren ge_v1 (verstecktes Layer 1)
-            self.ge_v1 += self.lr * np.dot(versteckte_1_fehler * versteckte_1_outputs * (1-versteckte_1_outputs), inputs.T)
+            self.ge_v1 += self.lr * np.dot((versteckte_1_fehler * versteckte_1_outputs * (1-versteckte_1_outputs)), inputs.T)
             pass
         else:
             sys.exit("Error: Anzahl versteckter Layers ungültig")

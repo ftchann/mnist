@@ -7,8 +7,13 @@ Created on Sat Jun 16 16:06:19 2018
 
 import numpy as np
 
-a=np.arange(4)
-a=a.reshape(2,2)  
+a=np.arange(10)
 
-print(np.pad(a, 2,'constant', constant_values=(0)))
- 
+a=a.T
+
+b=np.arange(200)
+b=np.reshape(b,(20,10))
+c=np.dot(b,a)
+
+print(a/2)
+
