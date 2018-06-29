@@ -11,9 +11,7 @@ a=np.arange(10)
 
 a=a.T
 
-b=np.arange(200)
-b=np.reshape(b,(20,10))
-c=np.dot(b,a)
-
-print(a/2)
+b=np.arange(20)
+b=np.reshape(b,(4,5))
+print(b)
 
