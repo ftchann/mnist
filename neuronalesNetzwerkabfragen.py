@@ -23,7 +23,7 @@ na.ge_v3 = gewichte[2]
 na.ge_v4 = gewichte[3]
 na.ge_v5 = gewichte[4]
 na.ge_va = gewichte[5]
-input_liste = bs.img_data
+input_liste = bs.img_0final
 print(input_liste)
 outputs = na.abfragen(input_liste)
 print(outputs)

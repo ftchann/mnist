@@ -11,7 +11,7 @@ import sys
 #Inputs, Hidden, Outputsnodes
 
 eingabeneuronen = 784
-versteckteneuronen = 20
+versteckteneuronen = 200
 ausgabeneuronen = 10
 #VersteckteLayers ändern
 verstecktelayers = 1
