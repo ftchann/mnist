@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Created on Sun Jun 10 18:16:22 2018
-
 @author: Yann
 """
 import numpy as np
@@ -9,12 +8,13 @@ import scipy.special
 import time
 import sys
 
-#Inputs, Hidden, Outputsnodes , bias 
+#Inputs, Hidden, Outputsnodes
 
 eingabeneuronen = 784
 versteckteneuronen = 20
 ausgabeneuronen = 10
-verstecktelayers = 5
+#VersteckteLayers ändern
+verstecktelayers = 1
 
 #learnrate 
 learnrate = 0.5
@@ -32,6 +32,12 @@ class neuronalesNetzwerk:
         self.vneuron2 = self.vneuron5*(verstecktelayers-1)
         self.vneuron3 = self.vneuron5*(verstecktelayers-2)
         self.vneuron4 = self.vneuron5*(verstecktelayers-3)
+        self.ge_va = 0
+        self.ge_v5 = 0
+        self.ge_v4 = 0
+        self.ge_v3 = 0
+        self.ge_v2 = 0
+        self.ge_v1 = 0
         #Gewichtungsmatrixen definieren
         #Grösse der Gewichtungsmatrix ist bei Geingave_versteckt versteckteneuron mal eingabeneuron und bei Gversteckt_ausgabe ausgabeneuron mal verstecktenodes.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Anfangszahlen zwischen +- hiddnennodes hoch -0.5 

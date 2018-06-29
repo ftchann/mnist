@@ -9,11 +9,12 @@ import scipy.special
 import time
 import sys
 
-#Inputs, Hidden, Outputsnodes , bias 
+#Inputs, Hidden, Outputsnodes
 
 eingabeneuronen = 784
 versteckteneuronen = 20
 ausgabeneuronen = 10
+#VersteckteLayers ändern
 verstecktelayers = 5
 
 #learnrate 
@@ -166,6 +167,12 @@ class neuronalesNetzwerk:
             print("ge_v3:", np.shape(d))
             print("ge_v2:", np.shape(e))
             print("ge_v1:", np.shape(f))
+            print("ge_va:", np.shape(self.ge_va))
+            print("ge_v5:", np.shape(self.ge_v5))
+            print("ge_v4:", np.shape(self.ge_v4))
+            print("ge_v3:", np.shape(self.ge_v3))
+            print("ge_v2:", np.shape(self.ge_v2))
+            print("ge_v1:", np.shape(self.ge_v1))
             self.ge_va += self.lr * np.dot((ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs)), versteckte_5_outputs.T)
             #Gewichte aktualisieren ge_v5 (verstecktes Layer 5)
             self.ge_v5 += self.lr * np.dot((versteckte_5_fehler * versteckte_5_outputs * (1-versteckte_5_outputs)), versteckte_4_outputs.T) 
