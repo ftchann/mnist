@@ -5,7 +5,6 @@ Created on Sun Jun 10 18:16:22 2018
 """
 import numpy as np
 import time
-import sys
 
 #Inputs, Hidden, Outputsnodes
 
