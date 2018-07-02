@@ -6,14 +6,8 @@ Created on Sat Jun 16 16:06:19 2018
 """
 
 import numpy as np
-def sigmoid(x):
-     return 1 / (1 + np.exp(-x))
-a=np.arange(10)
-
-a=a.T
-
-b=np.arange(20)
-
-
-a=sigmoid(b)
-print(a)
+shape = (3,9)
+np.random.seed(1)
+b=2 * np.random.random((1, shape[1])) - 1
+c=2 * np.random.random(shape) - 1
+a= np.vstack((c, b))
