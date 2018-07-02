@@ -13,7 +13,7 @@ from scipy import ndimage
 
 
 #reshape von 28x28 zu 784
-img_array = skimage.io.imread('7.jpg', 'L').astype(np.float32) 
+img_array = skimage.io.imread('9.jpg', 'L').astype(np.float32) 
 
 #Auf 255 erweitern 
 image= img_array*255
@@ -21,7 +21,7 @@ image= img_array*255
 
 #Treshholding
 blocksize = 9555
-global_thresh = threshold_local(image, blocksize, offset=70)
+global_thresh = threshold_local(image, blocksize, offset=100)
 binary_global = image > global_thresh
 #print(binary_global)
 
@@ -54,7 +54,7 @@ def MaxAbstand(Sxa, Sya, image):
     for j in range (np.shape(image)[1]):
         for i in range (np.shape(image)[0]):
             #Geht durch Zeilen und Spalten der Matrix und berechnet den Abstand, falls der Matrixwert grösser als 0 ist
-            if image[i, j] > 0.1:
+            if image[i, j] > 0:
                 dx = abs(i - Sx)
                 dy = abs(j - Sy)
                 #abstand = dx ** 2 + dy ** 2
@@ -97,5 +97,5 @@ img_0final = np.reshape(img_0final, 28*28)
 img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
 print(img_0final)
 img_final = np.reshape(img_0final,(28,28))
-plot.imshow(img_final, cmap='gray')
+plot.imshow(format_img, cmap='gray')
 ##print(img_final)
