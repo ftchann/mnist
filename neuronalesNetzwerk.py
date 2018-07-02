@@ -11,13 +11,13 @@ import sys
 #Inputs, Hidden, Outputsnodes
 
 eingabeneuronen = 784
-versteckteneuronen = 500
+versteckteneuronen = 20
 ausgabeneuronen = 10
 #VersteckteLayers ändern
-verstecktelayers = 1
+verstecktelayers = 5
 
 #learnrate 
-learnrate = 0.5
+learnrate = 0.1
 
 
 #Neuronales Netzwerk definieren
@@ -28,10 +28,11 @@ class neuronalesNetzwerk:
         self.vneuron5 = verstecketeneuronen
         self.aneuron= ausgabeneuronen
         self.vlayer = verstecktelayers
-        self.vneuron1 = self.vneuron5*verstecktelayers
-        self.vneuron2 = self.vneuron5*(verstecktelayers-1)
-        self.vneuron3 = self.vneuron5*(verstecktelayers-2)
-        self.vneuron4 = self.vneuron5*(verstecktelayers-3)
+        self.vneuron1 = self.vneuron5*self.vlayer
+        self.vneuron2 = self.vneuron5*(self.vlayer-1)
+        self.vneuron3 = self.vneuron5*(self.vlayer-2)
+        self.vneuron4 = self.vneuron5*(self.vlayer-3)
+        #*(verstecktelayers-3)
         self.ge_va = 0
         self.ge_v5 = 0
         self.ge_v4 = 0
