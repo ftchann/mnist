@@ -13,5 +13,6 @@ a=a.T
 
 b=np.arange(20)
 b=np.reshape(b,(4,5))
+b=np.pad()
 print(b)
 
