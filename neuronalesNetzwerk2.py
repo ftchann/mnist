@@ -28,6 +28,12 @@ class neuronalesNetzwerk:
         self.aneuron= ausgabeneuronen
         self.vneuron1 = 20
         self.vneuron2 = 40
+        self.ge_va = 0
+        self.ge_v5 = 0
+        self.ge_v4 = 0
+        self.ge_v3 = 0
+        self.ge_v2 = 0
+        self.ge_v1 = 0
         #Gewichtungsmatrixen definieren
         #Grösse der Gewichtungsmatrix ist bei Geingave_versteckt versteckteneuron mal eingabeneuron und bei Gversteckt_ausgabe ausgabeneuron mal verstecktenodes.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Anfangszahlen zwischen +- hiddnennodes hoch -0.5 
