@@ -15,7 +15,7 @@ eingabeneuronen = 784
 versteckteneuronen = 20
 ausgabeneuronen = 10
 #VersteckteLayers ändern
-verstecktelayers = 5
+verstecktelayers = 1
 
 #learnrate 
 learnrate = 0.2

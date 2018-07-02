@@ -11,7 +11,7 @@ import sys
 #Inputs, Hidden, Outputsnodes
 
 eingabeneuronen = 784
-versteckteneuronen = 200
+versteckteneuronen = 500
 ausgabeneuronen = 10
 #VersteckteLayers ändern
 verstecktelayers = 1
@@ -240,7 +240,7 @@ class neuronalesNetzwerk:
         trainings_daten_liste = lesen("train-images.idx3-ubyte", "train-labels.idx1-ubyte", 60000)
         #datei öffnen lesen1
         test_daten_liste = lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
-        while Durchlaufe < 3:
+        while Durchlaufe < 8:
             start = time.time()
             for i in range(len(trainings_daten_liste)):
                 daten = trainings_daten_liste[i]
@@ -255,7 +255,7 @@ class neuronalesNetzwerk:
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
                 best_ge = np.array([self.ge_v1, self.ge_v2, self.ge_v3, self.ge_v4, self.ge_v5, self.ge_va])
-                np.save("gewicht.npy", best_ge)
+                np.save("bestgewicht.npy", best_ge)
                 Durchlaufe = 0
                 #beste Gewichte     
                 #bestperformance neu setzen
