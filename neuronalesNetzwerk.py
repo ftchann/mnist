@@ -72,7 +72,7 @@ class neuronalesNetzwerk:
         return 1 / (1 + np.exp(-x))
         #Aktivierungsfunktion
     def sigmoid_ableitung(self, x):
-        return (self.sigmoid(x) * (1 + self.sigmoid(x)))
+        return x*(1-x)
                     
         
         
