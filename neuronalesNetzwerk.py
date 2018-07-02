@@ -68,12 +68,15 @@ class neuronalesNetzwerk:
         #Learnrate
         self.lr = learnrate
         #Sigmoid
-        def sigmoid(x): 
-            return 1 / (1 + np.exp(-x))
+    def sigmoid(self, x): 
+        return 1 / (1 + np.exp(-x))
         #Aktivierungsfunktion
-        self.aktivierungsfunktion = sigmoid
+    def sigmoid_ableitung(self, x):
+        return (self.sigmoid(x) * (1 + self.sigmoid(x)))
+                    
         
-        pass
+        
+        
     #neuronales Netzwerk tranieren
     def trainieren(self, inputs_list, ziel_liste,):
         #Inputsliste nehmen und transformieren damit sie hoch steht
@@ -85,26 +88,26 @@ class neuronalesNetzwerk:
             #Analog zu verstecktelayers = 1 einfach ohne die versteckte Komponenten
             #Dies ist nur ein Experiment welche genauigkeit sich mit keinen versteckten Layers erzielen lässt
             ausgabe_inputs = np.dot(self.ge_va, inputs)
-            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+            ausgabe_outputs = self.sigmoid(ausgabe_inputs)
             
             ausgabe_fehler = ziele - ausgabe_outputs
-            self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), inputs.T)
+            self.ge_va += self.lr * np.dot(ausgabe_fehler * self.sigmoid_ableitung(ausgabe_outputs), inputs.T)
             pass
         elif self.vlayer == 1: 
             #Inputs mal Gewicht
             versteckte_inputs = np.dot(self.ge_v1, inputs)
             #Das ganze in die Aktivierungsfunktion
-            versteckte_outputs = self.aktivierungsfunktion(versteckte_inputs)
+            versteckte_outputs = self.sigmoid(versteckte_inputs)
             #versteckte_outputs (neues inputs) mal Gewicht
             ausgabe_inputs = np.dot(self.ge_va, versteckte_outputs)
             #Das ganze in die Aktivierungsfunktion
-            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)    
+            ausgabe_outputs = self.sigmoid(ausgabe_inputs)    
         
            
             #ausgabefehler (Ziel-Output)
-            ausgabe_fehler = ziele - ausgabe_outputs
+            ausgabe_fehler = (ziele - ausgabe_outputs) * self.sigmoid_ableitung
             #verstecktefehler (Output mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
-            versteckte_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
+            versteckte_fehler = np.dot(self.ge_va.T, ausgabe_fehler) * self.sigmoid_ableitung
             #Gewichte aktuallisieren hidden output
             self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_outputs.T)
             #Gewichte aktuallisieren hidden und output                            
@@ -113,43 +116,37 @@ class neuronalesNetzwerk:
         
         elif self.vlayer == 5:
             #Verstecktes Layer 1
-            versteckte_1_inputs = np.dot(self.ge_v1, inputs)
-            versteckte_1_outputs = self.aktivierungsfunktion(versteckte_1_inputs)
-            #Verstecktes Layer 2
-            versteckte_2_inputs = np.dot(self.ge_v2, versteckte_1_outputs)
-            versteckte_2_outputs = self.aktivierungsfunktion(versteckte_2_inputs)
+            versteckte_1_outputs = self.sigmoid(np.dot(self.ge_v1, inputs))
+            #Verstecktes Layer 2  
+            versteckte_2_outputs = self.sigmoid(np.dot(self.ge_v2, versteckte_1_outputs))
             #Verstecktes Layer 3
-            versteckte_3_inputs = np.dot(self.ge_v3, versteckte_2_outputs)
-            versteckte_3_outputs = self.aktivierungsfunktion(versteckte_3_inputs)
+            versteckte_3_outputs = self.sigmoid(np.dot(self.ge_v3, versteckte_2_outputs))
             #Verstecktes Layer 4
-            versteckte_4_inputs = np.dot(self.ge_v4, versteckte_3_outputs)
-            versteckte_4_outputs = self.aktivierungsfunktion(versteckte_4_inputs)
+            versteckte_4_outputs = self.sigmoid(np.dot(self.ge_v4, versteckte_3_outputs))
             #Verstecktes Layer 5
-            versteckte_5_inputs = np.dot(self.ge_v5, versteckte_4_outputs)
-            versteckte_5_outputs = self.aktivierungsfunktion(versteckte_5_inputs)  
+            versteckte_5_outputs = self.sigmoid(np.dot(self.ge_v5, versteckte_4_outputs))
             #Ausgabe Layer
-            ausgabe_inputs = np.dot(self.ge_va, versteckte_5_outputs)
-            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+            ausgabe_outputs = self.sigmoid(np.dot(self.ge_va, versteckte_5_outputs))
             
-            ausgabe_fehler = ziele - ausgabe_outputs
-            versteckte_5_fehler = np.dot(self.ge_va.T, ausgabe_fehler)
-            versteckte_4_fehler = np.dot(self.ge_v5.T, versteckte_5_fehler)
-            versteckte_3_fehler = np.dot(self.ge_v4.T, versteckte_4_fehler)
-            versteckte_2_fehler = np.dot(self.ge_v3.T, versteckte_3_fehler)
-            versteckte_1_fehler = np.dot(self.ge_v2.T, versteckte_2_fehler)
+            ausgabe_fehler = (ziele - ausgabe_outputs) * self.sigmoid_ableitung(ausgabe_outputs)
+            versteckte_5_fehler = np.dot(self.ge_va.T, ausgabe_fehler) * self.sigmoid_ableitung(versteckte_5_outputs)
+            versteckte_4_fehler = np.dot(self.ge_v5.T, versteckte_5_fehler) * self.sigmoid_ableitung(versteckte_4_outputs)
+            versteckte_3_fehler = np.dot(self.ge_v4.T, versteckte_4_fehler) * self.sigmoid_ableitung(versteckte_3_outputs)
+            versteckte_2_fehler = np.dot(self.ge_v3.T, versteckte_3_fehler) * self.sigmoid_ableitung(versteckte_2_outputs)
+            versteckte_1_fehler = np.dot(self.ge_v2.T, versteckte_2_fehler) * self.sigmoid_ableitung(versteckte_1_outputs)
             #Gewichte aktualisieren ge_va (Output)
 
-            self.ge_va += self.lr * np.dot((ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs)), versteckte_5_outputs.T)
+            self.ge_va += self.lr * np.dot(ausgabe_fehler, versteckte_5_outputs.T)
             #Gewichte aktualisieren ge_v5 (verstecktes Layer 5)
-            self.ge_v5 += self.lr * np.dot((versteckte_5_fehler * versteckte_5_outputs * (1-versteckte_5_outputs)), versteckte_4_outputs.T) 
+            self.ge_v5 += self.lr * np.dot(versteckte_5_fehler, versteckte_4_outputs.T) 
             #Gewichte aktualisieren ge_v4 (verstecktes Layer 4)
-            self.ge_v4 += self.lr * np.dot((versteckte_4_fehler * versteckte_4_outputs * (1-versteckte_4_outputs)), versteckte_3_outputs.T)
+            self.ge_v4 += self.lr * np.dot(versteckte_4_fehler, versteckte_3_outputs.T)
             #Gewichte aktualisieren ge_v3 (verstecktes Layer 3)
-            self.ge_v3 += self.lr * np.dot((versteckte_3_fehler * versteckte_3_outputs * (1-versteckte_3_outputs)), versteckte_2_outputs.T)
+            self.ge_v3 += self.lr * np.dot(versteckte_3_fehler, versteckte_2_outputs.T)
             #Gewichte aktualisieren ge_v2 (verstecktes Layer 2)
-            self.ge_v2 += self.lr * np.dot((versteckte_2_fehler * versteckte_2_outputs * (1-versteckte_2_outputs)), versteckte_1_outputs.T)
+            self.ge_v2 += self.lr * np.dot(versteckte_2_fehler, versteckte_1_outputs.T)
             #Gewichte aktualisieren ge_v1 (verstecktes Layer 1)
-            self.ge_v1 += self.lr * np.dot((versteckte_1_fehler * versteckte_1_outputs * (1-versteckte_1_outputs)), inputs.T)
+            self.ge_v1 += self.lr * np.dot(versteckte_1_fehler, inputs.T)
             pass
         else:
             sys.exit("Error: Anzahl versteckter Layers ungültig")
@@ -164,7 +161,7 @@ class neuronalesNetzwerk:
         
         if self.vlayer == 0:
             ausgabe_inputs = np.dot(self.ge_va, inputs)
-            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+            ausgabe_outputs = self.sigmoid(ausgabe_inputs)
             
             return ausgabe_outputs
         if self.vlayer == 1:    
@@ -172,35 +169,23 @@ class neuronalesNetzwerk:
             #Inputs mal Gewicht
             versteckte_inputs = np.dot(self.ge_v1, inputs)
             #Das ganze in die Aktivierungsfunktion
-            versteckte_outputs = self.aktivierungsfunktion(versteckte_inputs)
+            versteckte_outputs = self.sigmoid(versteckte_inputs)
             #versteckte_outputs (neues inputs) mal Gewicht
             ausgabe_inputs = np.dot(self.ge_va, versteckte_outputs)
             #Das ganze in die Aktivierungsfunktion
-            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
+            ausgabe_outputs = self.sigmoid(ausgabe_inputs)
         
             return ausgabe_outputs
         
         if self.vlayer == 5:
-                        #Verstecktes Layer 1
-            versteckte_1_inputs = np.dot(self.ge_v1, inputs)
-            versteckte_1_outputs = self.aktivierungsfunktion(versteckte_1_inputs)
-            #Verstecktes Layer 2
-            versteckte_2_inputs = np.dot(self.ge_v2, versteckte_1_outputs)
-            versteckte_2_outputs = self.aktivierungsfunktion(versteckte_2_inputs)
-            #Verstecktes Layer 3
-            versteckte_3_inputs = np.dot(self.ge_v3, versteckte_2_outputs)
-            versteckte_3_outputs = self.aktivierungsfunktion(versteckte_3_inputs)
-            #Verstecktes Layer 4
-            versteckte_4_inputs = np.dot(self.ge_v4, versteckte_3_outputs)
-            versteckte_4_outputs = self.aktivierungsfunktion(versteckte_4_inputs)
-            #Verstecktes Layer 5
-            versteckte_5_inputs = np.dot(self.ge_v5, versteckte_4_outputs)
-            versteckte_5_outputs = self.aktivierungsfunktion(versteckte_5_inputs)  
-            #Ausgabe Layer
-            ausgabe_inputs = np.dot(self.ge_va, versteckte_5_outputs)
-            ausgabe_outputs = self.aktivierungsfunktion(ausgabe_inputs)
-
             
+            versteckte_1_outputs = self.sigmoid(np.dot(self.ge_v1, inputs))
+            versteckte_2_outputs = self.sigmoid(np.dot(self.ge_v2, versteckte_1_outputs))
+            versteckte_3_outputs = self.sigmoid(np.dot(self.ge_v3, versteckte_2_outputs))
+            versteckte_4_outputs = self.sigmoid(np.dot(self.ge_v4, versteckte_3_outputs))
+            versteckte_5_outputs = self.sigmoid(np.dot(self.ge_v5, versteckte_4_outputs))
+            ausgabe_outputs = self.sigmoid(np.dot(self.ge_va, versteckte_5_outputs))
+
             return ausgabe_outputs
             
     #abfragen
