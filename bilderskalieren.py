@@ -95,27 +95,6 @@ def MaxAbstand(Sxa, Sya, image):
     return maxdxy
             
 
-
-Sx, Sy = Schwerpunkt(img_array2)
-MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)
-
-
-OberY = int(Sy - MaxAbstand2 + 0.5)
-UnterY = int(Sy + MaxAbstand2 + 0.5)
-LinksX = int(Sx - MaxAbstand2 + 0.5)
-RechtsX = int(Sx + MaxAbstand2 + 0.5)
-Breite= RechtsX - LinksX
-Höhe = UnterY - OberY
-
-#print(Höhe,Breite)
-#print(MaxAbstand2)
-#print(Sx,Sy)
-#Schneiden
-
-format_img = img_array2[LinksX:RechtsX, OberY:UnterY]
-
-print(np.shape(format_img))
-
 def Schneiden(img_array2):
     Sx, Sy = Schwerpunkt(img_array2)
     MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)
