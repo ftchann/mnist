@@ -4,17 +4,16 @@ Created on Sun Jun 10 18:16:22 2018
 @author: Yann
 """
 import numpy as np
-import scipy.special
 import time
 import sys
 
 #Inputs, Hidden, Outputsnodes
 
 eingabeneuronen = 784
-versteckteneuronen = 300
+versteckteneuronen = 20
 ausgabeneuronen = 10
 #VersteckteLayers ändern
-verstecktelayers = 1
+verstecktelayers = 5
 
 #learnrate 
 learnrate = 0.1
@@ -24,6 +23,7 @@ learnrate = 0.1
 class neuronalesNetzwerk:
     #neuronales Netzwerk inistialisieren
     def __init__(self, eingabeneuronen, verstecketeneuronen, ausgabeneuronen, learnrate, verstecktelayers):
+        np.random.seed(1)
         self.eneuron = eingabeneuronen
         self.vneuron5 = verstecketeneuronen
         self.aneuron= ausgabeneuronen
@@ -69,7 +69,7 @@ class neuronalesNetzwerk:
         self.lr = learnrate
         #Sigmoid
         def sigmoid(x): 
-            return scipy.special.expit(x)
+            return 1 / (1 + np.exp(-x))
         #Aktivierungsfunktion
         self.aktivierungsfunktion = sigmoid
         
