@@ -94,7 +94,8 @@ format_img_rescale = skimage.transform.rescale(format_img*255,20/shape_format_im
 img_0final = np.pad(format_img_rescale, 4,'constant', constant_values=(0))
 print(np.shape(img_0final))
 img_0final = np.reshape(img_0final, 28*28)
-img_0final = img_0final / img_0final[np.argmax(img_0final)]
+img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
+print(img_0final)
 img_final = np.reshape(img_0final,(28,28))
 plot.imshow(img_final, cmap='gray')
 ##print(img_final)
