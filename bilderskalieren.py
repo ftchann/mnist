@@ -8,22 +8,21 @@ import numpy as np
 import skimage.io
 import matplotlib.pyplot as plot
 import skimage.transform
-from skimage.filters import threshold_otsu
+from skimage.filters import threshold_local
 from scipy import ndimage
 
 
 #reshape von 28x28 zu 784
-<<<<<<< HEAD
+
 img_array = skimage.io.imread('2.jpg', 'L').astype(np.float32) 
-=======
-img_array = skimage.io.imread('11.png', 'L').astype(np.float32) 
->>>>>>> 6e4870631c790d1003157c130c999703a5d381c4
+
+
 
 #Auf 255 erweitern 
-image= img_array
+image= img_array *255
 #Treshholding
 blocksize = 9555
-global_thresh = threshold_otsu(image)
+global_thresh = threshold_local(image, blocksize, offset=100)
 binary_global = image > global_thresh
 #print(binary_global)
 
@@ -73,29 +72,19 @@ def MaxAbstand(Sxa, Sya, image):
 
 Sx, Sy = Schwerpunkt(img_array2)
 MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)
-<<<<<<< HEAD
-#Sx2, Sy2 = ndimage.measurements.center_of_mass(img_array2)
-#print((Sx ,Sy), ",", (Sx2, Sy2))
+
+
 OberY = int(Sy - MaxAbstand2 + 0.5)
 UnterY = int(Sy + MaxAbstand2 + 0.5)
 LinksX = int(Sx - MaxAbstand2 + 0.5)
 RechtsX = int(Sx + MaxAbstand2 + 0.5)
 Breite= RechtsX - LinksX
 Höhe = UnterY - OberY
-print(OberY, UnterY, LinksX, RechtsX)
-print(Höhe,Breite)
-=======
-print(MaxAbstand2)
-print(Sx,Sy)
-#Schneiden
-OberY = int(Sy - MaxAbstand2)
-UnterY = int(Sy + MaxAbstand2)
-LinksX = int(Sx - MaxAbstand2)
-RechtsX = int(Sx + MaxAbstand2)
-Breite= RechtsX-LinksX
-Höhe = UnterY - OberY
 
->>>>>>> 6e4870631c790d1003157c130c999703a5d381c4
+#print(Höhe,Breite)
+#print(MaxAbstand2)
+#print(Sx,Sy)
+#Schneiden
 
 format_img = img_array2[LinksX:RechtsX, OberY:UnterY]
 
@@ -103,12 +92,11 @@ print(np.shape(format_img))
 #print(Sx,Sy)
 #print(MaxAbstand2)
 shape_format_img = np.shape(format_img)
-<<<<<<< HEAD
-#print(shape_format_img[0])
-=======
 
-print(shape_format_img[0])
->>>>>>> 6e4870631c790d1003157c130c999703a5d381c4
+#print(shape_format_img[0])
+
+
+
 print(shape_format_img[0])
 format_img_rescale = skimage.transform.rescale(format_img*255,20/shape_format_img[0])
 #
@@ -116,10 +104,9 @@ img_0final = np.pad(format_img_rescale, 4,'constant', constant_values=(0))
 print(np.shape(img_0final))
 img_0final = np.reshape(img_0final, 28*28)
 img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
-<<<<<<< HEAD
+
 #print(img_0final)
-=======
->>>>>>> 6e4870631c790d1003157c130c999703a5d381c4
+
 img_final = np.reshape(img_0final,(28,28))
-plot.imshow(format_img, cmap='gray')
+plot.imshow(img_final, cmap='gray')
 #print(img_final)
