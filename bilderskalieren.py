@@ -13,7 +13,7 @@ from scipy import ndimage
 
 
 #reshape von 28x28 zu 784
-img_array = skimage.io.imread('9.jpg', 'L').astype(np.float32) 
+img_array = skimage.io.imread('2.jpg', 'L').astype(np.float32) 
 
 #Auf 255 erweitern 
 image= img_array*255
@@ -41,8 +41,8 @@ def Schwerpunkt(image):
     #Diese Funktion dient zum  bestimmen des Schwerpunkts des Bildes
     indices = np.indices((np.shape(image)))
     #multipliziert die Werte in der Bildmatrix mit ihrem jewweiligen x-Achsenabschnitt und teilt die Summe davon mit der Summe aller Werte der Matrix
-    x = (np.sum(image * indices[1])) / np.sum(image)
-    y = (np.sum(image * indices[0])) / np.sum(image)
+    x = (np.sum(image * indices[0])) / np.sum(image)
+    y = (np.sum(image * indices[1])) / np.sum(image)
     return x,y
 
 
@@ -54,7 +54,7 @@ def MaxAbstand(Sxa, Sya, image):
     for j in range (np.shape(image)[1]):
         for i in range (np.shape(image)[0]):
             #Geht durch Zeilen und Spalten der Matrix und berechnet den Abstand, falls der Matrixwert grösser als 0 ist
-            if image[i, j] > 0:
+            if image[i, j] > 0.1 :
                 dx = abs(i - Sx)
                 dy = abs(j - Sy)
                 #abstand = dx ** 2 + dy ** 2
@@ -71,22 +71,23 @@ def MaxAbstand(Sxa, Sya, image):
 
 Sx, Sy = Schwerpunkt(img_array2)
 MaxAbstand2 = MaxAbstand(Sx, Sy, img_array2)
-
+#Sx2, Sy2 = ndimage.measurements.center_of_mass(img_array2)
+#print((Sx ,Sy), ",", (Sx2, Sy2))
 OberY = int(Sy - MaxAbstand2 + 0.5)
 UnterY = int(Sy + MaxAbstand2 + 0.5)
 LinksX = int(Sx - MaxAbstand2 + 0.5)
 RechtsX = int(Sx + MaxAbstand2 + 0.5)
-Breite= RechtsX-LinksX
+Breite= RechtsX - LinksX
 Höhe = UnterY - OberY
+print(OberY, UnterY, LinksX, RechtsX)
 print(Höhe,Breite)
 
-format_img = img_array2[OberY:UnterY, LinksX:RechtsX]
+format_img = img_array2[LinksX:RechtsX, OberY:UnterY]
 
 print(np.shape(format_img))
 #print(Sx,Sy)
 #print(MaxAbstand2)
 shape_format_img = np.shape(format_img)
-
 #print(shape_format_img[0])
 print(shape_format_img[0])
 format_img_rescale = skimage.transform.rescale(format_img*255,20/shape_format_img[0])
@@ -95,7 +96,7 @@ img_0final = np.pad(format_img_rescale, 4,'constant', constant_values=(0))
 print(np.shape(img_0final))
 img_0final = np.reshape(img_0final, 28*28)
 img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
-print(img_0final)
+#print(img_0final)
 img_final = np.reshape(img_0final,(28,28))
 plot.imshow(format_img, cmap='gray')
 ##print(img_final)
