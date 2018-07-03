@@ -198,7 +198,7 @@ class neuronalesNetzwerk:
         for i in range(len(test_daten_liste)):
             daten = test_daten_liste[i]
         #daten in matrix umwandeln und normieren auf 1
-            inputs = (np.asfarray(daten[1:]) / 255.0 * 0.999) + 0.001
+            inputs = (np.asfarray(daten[1:]) / 255.0)
             richtigeZahl = int(daten[0])
         #Zeil kreieren
             outputs = self.abfragen(inputs)
@@ -231,9 +231,9 @@ class neuronalesNetzwerk:
             for i in range(len(trainings_daten_liste)):
                 daten = trainings_daten_liste[i]
                 #daten in matrix umwandeln und normieren auf 1
-                inputs = (np.asfarray(daten[1:]) / 255.0 * 0.999) + 0.001
+                inputs = (np.asfarray(daten[1:]) / 255.0)
                 #Zeil kreieren
-                ziele = np.zeros(ausgabeneuronen) + 0.001
+                ziele = np.zeros(ausgabeneuronen) 
                 #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht in der Excel tabelle immer vorne
                 ziele[int(daten[0])] = 1
                 self.trainieren(inputs, ziele)
