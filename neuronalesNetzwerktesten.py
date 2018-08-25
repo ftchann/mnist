@@ -7,24 +7,26 @@ Created on Wed Jun 13 01:37:18 2018
 import numpy as np
 import neuronalesNetzwerk as nk
 
-eingabeneuronen = nk.eingabeneuronen
-versteckteneuronen = nk.versteckteneuronen
-ausgabeneuronen = nk.ausgabeneuronen
-verstecktelayers = nk.verstecktelayers
-#learnrate 
-learnrate = nk.learnrate
+numberof_input_neurons = 784
+numberof_hidden_neurons = 20
+numberof_output_neurons = 10
+#Anzahl versteckte Layers definieren
+numberof_hidden_layers = 1
+#learningrate definieren
+learningrate = 0.1
 #Neuronales Netzwerk erstellen
-na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
-#Gewichte laden   
-gewichte = np.load("gewicht.npy")
-print(gewichte)
-na.ge_v1 = gewichte[0]
-na.ge_v2 = gewichte[1]
-na.ge_v3 = gewichte[2]
-na.ge_v4 = gewichte[3]
-na.ge_v5 = gewichte[4]
-na.ge_va = gewichte[5]
-#Testdatei§ laden
-test_daten_liste = nk.lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
-performance = na.abfragen2(test_daten_liste)
+na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers)
+#Gewichte laden 
+weight = np.load("bestweight.npy")
+na.weight_hidden_1_input = weight[0]
+na.weight_hidden_2_1 = weight[1]
+na.weight_hidden_3_2 = weight[2]
+na.weight_hidden_4_3 = weight[3]
+na.weight_hidden_5_4 = weight[4]
+na.weight_hidden_output = weight[5]
+
+#Testdatei laden
+test_data_list = nk.readdata("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
+#Performance ausgeben
+performance = na.testnetwork(test_data_list)
 print(performance)

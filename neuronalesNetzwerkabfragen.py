@@ -7,25 +7,29 @@ Created on Wed Jun 13 01:37:18 2018
 import numpy as np
 import neuronalesNetzwerk as nk
 import bilderskalieren as bs
-eingabeneuronen = nk.eingabeneuronen
-versteckteneuronen = nk.versteckteneuronen
-ausgabeneuronen = nk.ausgabeneuronen
-verstecktelayers = nk.verstecktelayers
-#learnrate 
-learnrate = nk.learnrate
-
-na = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
-   
-gewichte = np.load("bestgewicht.npy")
-na.ge_v1 = gewichte[0]
-na.ge_v2 = gewichte[1]
-na.ge_v3 = gewichte[2]
-na.ge_v4 = gewichte[3]
-na.ge_v5 = gewichte[4]
-na.ge_va = gewichte[5]
-input_liste = bs.img_0final
+numberof_input_neurons = 784
+numberof_hidden_neurons = 20
+numberof_output_neurons = 10
+#Anzahl versteckte Layers definieren
+numberof_hidden_layers = 1
+#learningrate definieren
+learningrate = 0.1
+#Neuronales Netzwerk erstellen
+na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers)
+#Gewichte laden 
+weight = np.load("bestweight.npy")
+na.weight_hidden_1_input = weight[0]
+na.weight_hidden_2_1 = weight[1]
+na.weight_hidden_3_2 = weight[2]
+na.weight_hidden_4_3 = weight[3]
+na.weight_hidden_5_4 = weight[4]
+na.weight_hidden_output = weight[5]
+#Bild laden
+input_list = bs.img_final
 print(input_liste)
-outputs = na.abfragen(input_liste)
+#Ausgabe Matrix
+outputs = na.ask(input_list)
 print(outputs)
-Zahl = np.argmax(outputs)
-print(Zahl)
+Number = np.argmax(outputs)
+#Zahl ausgeben
+print(Number)

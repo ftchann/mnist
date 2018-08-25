@@ -7,278 +7,275 @@ import numpy as np
 import time
 import sys
 
-#Inputs, Hidden, Outputsnodes
+#Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
+numberof_input_neurons = 784
+numberof_hidden_neurons = 20
+numberof_output_neurons = 10
+#Anzahl versteckte Layers definieren
+numberof_hidden_layers = 1
 
-eingabeneuronen = 784
-versteckteneuronen = 500
-ausgabeneuronen = 10
-#VersteckteLayers ändern
-verstecktelayers = 5
-
-#learnrate 
-learnrate = 0.1
+#learningrate definieren
+learningrate = 0.1
 
 
 #Neuronales Netzwerk definieren
-class neuronalesNetzwerk:
+class neuralNetwork:
     #neuronales Netzwerk inistialisieren
-    def __init__(self, eingabeneuronen, verstecketeneuronen, ausgabeneuronen, learnrate, verstecktelayers):
-        np.random.seed(1)
-        self.eneuron = eingabeneuronen
-        self.vneuron5 = verstecketeneuronen
-        self.aneuron= ausgabeneuronen
-        self.vlayer = verstecktelayers
-        self.vneuron1 = self.vneuron5*self.vlayer
-        self.vneuron2 = self.vneuron5*(self.vlayer-1)
-        self.vneuron3 = self.vneuron5*(self.vlayer-2)
-        self.vneuron4 = self.vneuron5*(self.vlayer-3)
-        #*(verstecktelayers-3)
-        self.ge_va = 0
-        self.ge_v5 = 0
-        self.ge_v4 = 0
-        self.ge_v3 = 0
-        self.ge_v2 = 0
-        self.ge_v1 = 0
+    def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers):
+        np.random.seed(1)#Seed festlegen
+		self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
+        self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
+        self.output_neurons= numberof_output_neurons # Anzahl ausgabeneuronen
+        self.hidden_neurons_1 = self.hidden_neurons_5*self.hidden_layers # Anzahl hiddenneuronen Layer 1
+        self.hidden_neurons_2 = self.hidden_neurons_5*(self.hidden_layers-1) # Anzahl hiddenneuronen Layer 2
+        self.hidden_neurons_3 = self.hidden_neurons_5*(self.hidden_layers-2) # Anzahl hiddenneuronen Layer 3
+        self.hidden_neurons_4 = self.hidden_neurons_5*(self.hidden_layers-3) # Anzahl hiddenneuronen Layer 4
+		self.hidden_neurons_5 = numberof_hidden_neurons # Anzahl hiddenneuronen Layer 5
+		#Alles 0 setzen. Behebt das Problem beim speichern, wenn nicht alle hidden layers genutzt werden.
+        self.weight_hidden_output = 0
+        self.weight_hidden_5_4 = 0
+        self.weight_hidden_4_3 = 0
+        self.weight_hidden_3_2 = 0
+        self.weight_hidden_2_1 = 0
+        self.weight_hidden_1_input = 0
         #Gewichtungsmatrixen definieren
-        #Grösse der Gewichtungsmatrix ist bei Geingave_versteckt versteckteneuron mal eingabeneuron und bei Gversteckt_ausgabe ausgabeneuron mal verstecktenodes.
-        #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Anfangszahlen zwischen +- hiddnennodes hoch -0.5 
-        #Gewichte Verstekt Ausgabe
-        if self.vlayer == 0:
-            self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.eneuron))
+        #Grösse der Gewichtungsmatrix ist hintere Layer mal vordere Layer.
+        #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Diese sind 0 +- hiddnennodes hoch -0.5 
+        #Gewichte Versteckte-Outputlayer
+        if self.hidden_layers == 0:
+            self.weight_hidden_output = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, self.input_neurons))
             
-        if self.vlayer > 0:
-            self.ge_va = np.random.normal(0.0,pow(self.aneuron, -0.5),(self.aneuron, self.vneuron5))
+        if self.hidden_layers > 0:
+            self.weight_hidden_output = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, self.hidden_neurons_5))
             
         #Gewichte Hiddenlayer 1 - 5
-        #Im Moment haben alle Hiddenlayers die selbe Anzahl Neuronen <- Stimmt nicht
-        if self.vlayer >= 1:
-            self.ge_v1 = np.random.normal(0.0,pow(self.vneuron1, -0.5),(self.vneuron1, self.eneuron))
+        #Im Moment haben alle Verstecktenlayers die selbe Anzahl Neuronen numberof_hidden_neurons * numberof_hidden_layers
+        if self.hidden_layers >= 1:
+            self.weight_hidden_1_input = np.random.normal(0.0,pow(self.hidden_neurons_1, -0.5),(self.hidden_neurons_1, self.input_neurons))
         
-        if self.vlayer >= 2:
-            self.ge_v2 = np.random.normal(0.0,pow(self.vneuron2, -0.5),(self.vneuron2, self.vneuron1))
+        if self.hidden_layers >= 2:
+            self.weight_hidden_2_1 = np.random.normal(0.0,pow(self.hidden_neurons_2, -0.5),(self.hidden_neurons_2, self.hidden_neurons_1))
             
-        if self.vlayer >= 3:
-            self.ge_v3 = np.random.normal(0.0,pow(self.vneuron3, -0.5),(self.vneuron3, self.vneuron2))
+        if self.hidden_layers >= 3:
+            self.weight_hidden_3_2 = np.random.normal(0.0,pow(self.hidden_neurons_3, -0.5),(self.hidden_neurons_3, self.hidden_neurons_2))
             
-        if self.vlayer >= 4:
-            self.ge_v4 = np.random.normal(0.0,pow(self.vneuron4, -0.5),(self.vneuron4, self.vneuron3))
+        if self.hidden_layers >= 4:
+            self.weight_hidden_4_3 = np.random.normal(0.0,pow(self.hidden_neurons_4, -0.5),(self.hidden_neurons_4, self.hidden_neurons_3))
             
-        if self.vlayer >= 5:
-            self.ge_v5 = np.random.normal(0.0,pow(self.vneuron5, -0.5),(self.vneuron5, self.vneuron4))
+        if self.hidden_layers >= 5:
+            self.weight_hidden_5_4 = np.random.normal(0.0,pow(self.hidden_neurons_5, -0.5),(self.hidden_neurons_5, self.hidden_neurons_4))
         #Learnrate
-        self.lr = learnrate
-        #Sigmoid
+        self.lr = learningrate
+        #Aktivierungsfunktion
+		#Sigmoid Funktion
     def sigmoid(self, x): 
         return 1 / (1 + np.exp(-x))
-        #Aktivierungsfunktion
-    def sigmoid_ableitung(self, x):
+        #Ableitung SigmoidFunktion
+    def sigmoid_derivate(self, x):
         return x*(1-x)
                     
         
         
         
-    #neuronales Netzwerk tranieren
-    def trainieren(self, inputs_list, ziel_liste,):
+    #neuronales Netzwerk trainieren
+    def train(self, inputs_list, target_list,):
         #Inputsliste nehmen und transformieren damit sie hoch steht
         inputs = np.array(inputs_list, ndmin=2).T
         #Das Gleiche mit der Zielliste
-        ziele = np.array(ziel_liste, ndmin=2).T
+        targets = np.array(target_list, ndmin=2).T
         
-        if self.vlayer == 0:
-            #Analog zu verstecktelayers = 1 einfach ohne die versteckte Komponenten
-            #Dies ist nur ein Experiment welche genauigkeit sich mit keinen versteckten Layers erzielen lässt
-            ausgabe_inputs = np.dot(self.ge_va, inputs)
-            ausgabe_outputs = self.sigmoid(ausgabe_inputs)
+        if self.hidden_layers == 0:
+            #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten.
+            #Dies ist nur ein Experiment welche genauigkeit sich mit keinen hiddenn Layers erzielen lässt.
+            output_inputs = np.dot(self.weight_hidden_output, inputs)
+            output_outputs = self.sigmoid(output_inputs)
             
-            ausgabe_fehler = ziele - ausgabe_outputs
-            self.ge_va += self.lr * np.dot(ausgabe_fehler * self.sigmoid_ableitung(ausgabe_outputs), inputs.T)
-            pass
-        elif self.vlayer == 1: 
-            #Inputs mal Gewicht
-            versteckte_inputs = np.dot(self.ge_v1, inputs)
+            output_error = targets - output_outputs
+            self.weight_hidden_output += self.lr * np.dot(output_error * self.sigmoid_derivate(output_outputs), inputs.T)
+            
+        elif self.hidden_layers == 1: 
+            #Eingabe mal Gewicht
+            hidden_inputs = np.dot(self.weight_hidden_1_input, inputs)
             #Das ganze in die Aktivierungsfunktion
-            versteckte_outputs = self.sigmoid(versteckte_inputs)
-            #versteckte_outputs (neues inputs) mal Gewicht
-            ausgabe_inputs = np.dot(self.ge_va, versteckte_outputs)
+            hidden_outputs = self.sigmoid(hidden_inputs)
+            #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix
+            output_inputs = np.dot(self.weight_hidden_output, hidden_outputs)
             #Das ganze in die Aktivierungsfunktion
-            ausgabe_outputs = self.sigmoid(ausgabe_inputs)    
+            output_outputs = self.sigmoid(output_inputs)    
         
            
-            #ausgabefehler (Ziel-Output)
-            ausgabe_fehler = (ziele - ausgabe_outputs) * self.sigmoid_ableitung
-            #verstecktefehler (Output mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
-            versteckte_fehler = np.dot(self.ge_va.T, ausgabe_fehler) * self.sigmoid_ableitung
-            #Gewichte aktuallisieren hidden output
-            self.ge_va += self.lr * np.dot(ausgabe_fehler * ausgabe_outputs * (1-ausgabe_outputs), versteckte_outputs.T)
-            #Gewichte aktuallisieren hidden und output                            
-            self.ge_v1 += self.lr * np.dot(versteckte_fehler * versteckte_outputs * (1-versteckte_outputs), inputs.T)                     
-            pass
-        
-        elif self.vlayer == 5:
-            #Verstecktes Layer 1
-            versteckte_1_outputs = self.sigmoid(np.dot(self.ge_v1, inputs))
-            #Verstecktes Layer 2  
-            versteckte_2_outputs = self.sigmoid(np.dot(self.ge_v2, versteckte_1_outputs))
-            #Verstecktes Layer 3
-            versteckte_3_outputs = self.sigmoid(np.dot(self.ge_v3, versteckte_2_outputs))
-            #Verstecktes Layer 4
-            versteckte_4_outputs = self.sigmoid(np.dot(self.ge_v4, versteckte_3_outputs))
-            #Verstecktes Layer 5
-            versteckte_5_outputs = self.sigmoid(np.dot(self.ge_v5, versteckte_4_outputs))
-            #Ausgabe Layer
-            ausgabe_outputs = self.sigmoid(np.dot(self.ge_va, versteckte_5_outputs))
+            #ausgabefehler (Ziel-Ausgabe)
+            output_error = (targets - output_outputs) * self.sigmoid_derivate(output_outputs)
+            #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
+            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.sigmoid_derivate(hidden_outputs)
+            #Gewichte aktuallisieren Versteckt-Ausgabe
+            self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
+            #Gewichte aktuallisieren Eingabe-Versteckt                            
+            self.weight_hidden_1_input += self.lr * np.dot(hidden_error, inputs.T)                     
             
-            ausgabe_fehler = (ziele - ausgabe_outputs) * self.sigmoid_ableitung(ausgabe_outputs)
-            versteckte_5_fehler = np.dot(self.ge_va.T, ausgabe_fehler) * self.sigmoid_ableitung(versteckte_5_outputs)
-            versteckte_4_fehler = np.dot(self.ge_v5.T, versteckte_5_fehler) * self.sigmoid_ableitung(versteckte_4_outputs)
-            versteckte_3_fehler = np.dot(self.ge_v4.T, versteckte_4_fehler) * self.sigmoid_ableitung(versteckte_3_outputs)
-            versteckte_2_fehler = np.dot(self.ge_v3.T, versteckte_3_fehler) * self.sigmoid_ableitung(versteckte_2_outputs)
-            versteckte_1_fehler = np.dot(self.ge_v2.T, versteckte_2_fehler) * self.sigmoid_ableitung(versteckte_1_outputs)
-            #Gewichte aktualisieren ge_va (Output)
-
-            self.ge_va += self.lr * np.dot(ausgabe_fehler, versteckte_5_outputs.T)
-            #Gewichte aktualisieren ge_v5 (verstecktes Layer 5)
-            self.ge_v5 += self.lr * np.dot(versteckte_5_fehler, versteckte_4_outputs.T) 
-            #Gewichte aktualisieren ge_v4 (verstecktes Layer 4)
-            self.ge_v4 += self.lr * np.dot(versteckte_4_fehler, versteckte_3_outputs.T)
-            #Gewichte aktualisieren ge_v3 (verstecktes Layer 3)
-            self.ge_v3 += self.lr * np.dot(versteckte_3_fehler, versteckte_2_outputs.T)
-            #Gewichte aktualisieren ge_v2 (verstecktes Layer 2)
-            self.ge_v2 += self.lr * np.dot(versteckte_2_fehler, versteckte_1_outputs.T)
-            #Gewichte aktualisieren ge_v1 (verstecktes Layer 1)
-            self.ge_v1 += self.lr * np.dot(versteckte_1_fehler, inputs.T)
-            pass
+        
+        elif self.hidden_layers == 5:
+			#Analog zu hidden_layers==1
+            #hiddens Layer 1
+            hidden_1_outputs = self.sigmoid(np.dot(self.weight_hidden_1_input, inputs))
+            #hiddens Layer 2  
+            hidden_2_outputs = self.sigmoid(np.dot(self.weight_hidden_2_1, hidden_1_outputs))
+            #hiddens Layer 3
+            hidden_3_outputs = self.sigmoid(np.dot(self.weight_hidden_3_2, hidden_2_outputs))
+            #hiddens Layer 4
+            hidden_4_outputs = self.sigmoid(np.dot(self.weight_hidden_4_3, hidden_3_outputs))
+            #hiddens Layer 5
+            hidden_5_outputs = self.sigmoid(np.dot(self.weight_hidden_5_4, hidden_4_outputs))
+            #output Layer
+            output_outputs = self.sigmoid(np.dot(self.weight_hidden_output, hidden_5_outputs))
+            
+            output_error = (targets - output_outputs) * self.sigmoid_derivate(output_outputs)
+            hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.sigmoid_derivate(hidden_5_outputs)
+            hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.sigmoid_derivate(hidden_4_outputs)
+            hidden_3_error = np.dot(self.weight_hidden_4_3.T, hidden_4_error) * self.sigmoid_derivate(hidden_3_outputs)
+            hidden_2_error = np.dot(self.weight_hidden_3_2.T, hidden_3_error) * self.sigmoid_derivate(hidden_2_outputs)
+            hidden_1_error = np.dot(self.weight_hidden_2_1.T, hidden_2_error) * self.sigmoid_derivate(hidden_1_outputs)
+            #Gewichte aktualisieren Versteckt-Ausgabe
+            self.weight_hidden_output += self.lr * np.dot(output_error, hidden_5_outputs.T)
+            #Gewichte aktualisieren Versteckt_5-4
+            self.weight_hidden_5_4 += self.lr * np.dot(hidden_5_error, hidden_4_outputs.T) 
+            #Gewichte aktualisieren Versteckt_4-3
+            self.weight_hidden_4_3 += self.lr * np.dot(hidden_4_error, hidden_3_outputs.T)
+            #Gewichte aktualisieren Versteckt_3-2
+            self.weight_hidden_3_2 += self.lr * np.dot(hidden_3_error, hidden_2_outputs.T)
+            #Gewichte aktualisieren Versteckt_2-1
+            self.weight_hidden_2_1 += self.lr * np.dot(hidden_2_error, hidden_1_outputs.T)
+            #Gewichte aktualisieren Versteckt1-Eingabe
+            self.weight_hidden_1_input += self.lr * np.dot(hidden_1_error, inputs.T)
+            
         else:
-            sys.exit("Error: Anzahl versteckter Layers ungültig")
+            sys.exit("Error: Anzahl hiddenr Layers ungültig")
             
             
     
             
-    #neuronales Netzwerk abfragen
-    def abfragen(self, inputs_list):
+    #neuronales Netzwerk abfragen ähnlich wie neuronales Netzwerk trainieren
+    def asknetwork(self, inputs_list):
         #Inputsliste nehmen und transformieren damit sie hoch steht
         inputs = np.array(inputs_list, ndmin=2).T
-        
-        if self.vlayer == 0:
-            ausgabe_inputs = np.dot(self.ge_va, inputs)
-            ausgabe_outputs = self.sigmoid(ausgabe_inputs)
-            
-            return ausgabe_outputs
-        if self.vlayer == 1:    
+        #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten
+        if self.hidden_layers == 0:
+            output_inputs = np.dot(self.weight_hidden_output, inputs)
+            output_outputs = self.sigmoid(output_inputs)
+            return output_outputs
+        if self.hidden_layers == 1:    
            
             #Inputs mal Gewicht
-            versteckte_inputs = np.dot(self.ge_v1, inputs)
+            hidden_inputs = np.dot(self.weight_hidden_1_input, inputs)
             #Das ganze in die Aktivierungsfunktion
-            versteckte_outputs = self.sigmoid(versteckte_inputs)
-            #versteckte_outputs (neues inputs) mal Gewicht
-            ausgabe_inputs = np.dot(self.ge_va, versteckte_outputs)
+            hidden_outputs = self.sigmoid(hidden_inputs)
+            #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix
+            output_inputs = np.dot(self.weight_hidden_output, hidden_outputs)
             #Das ganze in die Aktivierungsfunktion
-            ausgabe_outputs = self.sigmoid(ausgabe_inputs)
+            output_outputs = self.sigmoid(output_inputs)
         
-            return ausgabe_outputs
+            return output_outputs
         
-        if self.vlayer == 5:
-            
-            versteckte_1_outputs = self.sigmoid(np.dot(self.ge_v1, inputs))
-            versteckte_2_outputs = self.sigmoid(np.dot(self.ge_v2, versteckte_1_outputs))
-            versteckte_3_outputs = self.sigmoid(np.dot(self.ge_v3, versteckte_2_outputs))
-            versteckte_4_outputs = self.sigmoid(np.dot(self.ge_v4, versteckte_3_outputs))
-            versteckte_5_outputs = self.sigmoid(np.dot(self.ge_v5, versteckte_4_outputs))
-            ausgabe_outputs = self.sigmoid(np.dot(self.ge_va, versteckte_5_outputs))
+        if self.hidden_layers == 5:
+            #Versteckte Ausgaben berechnen analog wie bei hidden_layers=1
+            hidden_1_outputs = self.sigmoid(np.dot(self.weight_hidden_1_input, inputs))
+            hidden_2_outputs = self.sigmoid(np.dot(self.weight_hidden_2_1, hidden_1_outputs))
+            hidden_3_outputs = self.sigmoid(np.dot(self.weight_hidden_3_2, hidden_2_outputs))
+            hidden_4_outputs = self.sigmoid(np.dot(self.weight_hidden_4_3, hidden_3_outputs))
+            hidden_5_outputs = self.sigmoid(np.dot(self.weight_hidden_5_4, hidden_4_outputs))
+            output_outputs = self.sigmoid(np.dot(self.weight_hidden_output, hidden_5_outputs))
 
-            return ausgabe_outputs
+            return output_outputs
             
-    #abfragen
-    def abfragen2(self, testdatenliste):
-    #Performance
-        anzahlRichtige = 0
-        anzahlVersuche = 0
-    #daten nehmen
-        test_daten_liste = testdatenliste
-        for i in range(len(test_daten_liste)):
-            daten = test_daten_liste[i]
-        #daten in matrix umwandeln und normieren auf 1
-            inputs = (np.asfarray(daten[1:]) / 255.0)
-            richtigeZahl = int(daten[0])
+    def testnetwork(self, testdatalist):
+    #Performance Richtige, Versuche
+        Right = 0
+        Tries = 0
+    #data nehmen
+        test_data_list = testdatalist
+        for i in range(len(test_data_list)):
+            data = test_data_list[i]
+        #data in matrix umwandeln und normieren auf 1
+            inputs = (np.asfarray(data[1:]) / 255.0)
+            rightnumber = int(data[0])
         #Zeil kreieren
-            outputs = self.abfragen(inputs)
+            outputs = self.asknetwork(inputs)
             Zahl = np.argmax(outputs)
         
-            if(Zahl==richtigeZahl):
-                anzahlRichtige += 1
-                anzahlVersuche += 1
+            if(Zahl==rightnumber):
+                Right += 1
+                Tries += 1
             else:
-                anzahlVersuche +=1
-                pass
+                Tries +=1
+                
      
     #performance ausgeben
-        performance = anzahlRichtige/anzahlVersuche
+        performance = Right/Tries
         print("Performance =", performance)
         return performance
-        pass
+        
 
-#trainieren daten einlesen und trennen 
-    def trainieren2(self):
+#trainingsdaten einlesen und trennen 
+    def trainnetwork(self):
         bestperformance = 0
-        Durchlaufe = 0
-        Durchläufe = 0
-         #datei öffnen lesen1
-        trainings_daten_liste = lesen("train-images.idx3-ubyte", "train-labels.idx1-ubyte", 60000)
-        #datei öffnen lesen1
-        test_daten_liste = lesen("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
-        while Durchlaufe < 8:
+        ite_without_imp = 0
+        iterations = 0
+         #datei öffnen trainingsdaten
+        training_data_list = readdata("train-images.idx3-ubyte", "train-labels.idx1-ubyte", 60000)
+        #datei öffnen testdaten
+        test_data_list = readdata("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
+        while ite_without_imp < 8:
             start = time.time()
-            for i in range(len(trainings_daten_liste)):
-                daten = trainings_daten_liste[i]
-                #daten in matrix umwandeln und normieren auf 1
-                inputs = (np.asfarray(daten[1:]) / 255.0)
-                #Zeil kreieren
-                ziele = np.zeros(ausgabeneuronen) 
-                #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht in der Excel tabelle immer vorne
-                ziele[int(daten[0])] = 1
-                self.trainieren(inputs, ziele)
-            performance = self.abfragen2(test_daten_liste)  
+            for i in range(len(training_data_list)):
+                data = training_data_list[i]
+                #data in matrix umwandeln und normieren auf 1
+                inputs = (np.asfarray(data[1:]) / 255.0)
+                #Ziel kreieren
+                targets = np.zeros(numberof_output_neurons) 
+                #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht immer vorne
+                targets[int(data[0])] = 1
+                self.train(inputs, targets)
+            performance = self.testnetwork(test_data_liste)  
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
-                best_ge = np.array([self.ge_v1, self.ge_v2, self.ge_v3, self.ge_v4, self.ge_v5, self.ge_va])
-                np.save("bestgewicht.npy", best_ge)
-                Durchlaufe = 0
+                best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
+                np.save("bestweight.npy", best_weight)
+                ite_without_imp = 0
                 #beste Gewichte     
                 #bestperformance neu setzen
                 bestperformance = performance
             else:
-                Durchlaufe = Durchlaufe + 1
-            Durchläufe += 1
+                ite_without_imp = ite_without_imp + 1
+            iterations += 1
             end = time.time()
-            print("Durchlaufe ohne Verbesserung:",Durchlaufe)
-            print("Durchläufe:", Durchläufe)
+            print("Durchläufe ohne Verbesserung:",ite_without_imp)
+            print("Durchläufe:", iterations)
             print("Zeit in Minuten:", (end-start)/60)
             print("bestperformance:", bestperformance)
-#            print(best_ge)
-        pass
-    pass
+
+        
 
 
 #Datei lesen
-def lesen(imgf, labelf, n):
+def readdata(imgf, labelf, n):
     #In binary Modus lesen von https://pjreddie.com/projects/mnist-in-csv/
-    bilder = open(imgf, "rb")
+    images = open(imgf, "rb")
     label = open(labelf, "rb")
-    #Erste 16 bezieungsweise 8 bytes überspringen, da keine Daten drin sind. Lesen funktion springt immer auf das Nächste.
-    bilder.read(16)
+    #Erste 16 bezieungsweise 8 bytes überspringen, da keine Daten drin sind. read() funktion springt immer auf das Nächste.
+    images.read(16)
     label.read(8)
-    bilddaten = []
+    bilddata = []
     #Ganze Datei durchgehen, n = anzahl bilder
     for i in range(n):
-        #Lesen und zwischenspeichern
-        bild = [ord(label.read(1))]
+        #lesen und zwischenspeichern
+        image = [ord(label.read(1))]
         for j in range(28*28):
-            bild.append(ord(bilder.read(1)))
-        #bild in Bilddaten einfügen
-        bilddaten.append(bild)
-    return bilddaten
+            image.append(ord(images.read(1)))
+        #bild in Bilddata einfügen
+        imagedata.append(image)
+    return imagedata
 
-
+#Neuronales Netzwerk erstellen.
 if __name__ == "__main__":
-    n = neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayers)
-    n.trainieren2()
+    n = neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers)
+    n.trainnetwork()

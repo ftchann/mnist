@@ -6,3 +6,5 @@ Created on Sat Jun 16 16:06:19 2018
 """
 
 
+import cupy as cp
+cp.arange(10)
