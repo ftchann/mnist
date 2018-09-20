@@ -20,10 +20,10 @@ def readpicture():
     image= img_array*255
     #Treshholding
     blocksize=9555
-    global_thresh = threshold_local(image, blocksize, offset=50)
-    binary_global = image > global_thresh
+    local_thresh = threshold_local(image, blocksize, method='mean', offset=50)
+    binary_local = image > local_thresh
     #werte umkehren
-    img_array2 = abs(1-np.int32(binary_global))
+    img_array2 = abs(1-np.int32(binary_local))
 	#Die Hälfte der Breite oder Länge bestimmen 
     shape_img = np.shape(img_array2)
     if shape_img[0] > shape_img[1]:
@@ -69,30 +69,31 @@ def MaxDistance(Sxa, Sya, image):
 def Cut(img_array2):
     Sx, Sy = CenterofMass(img_array2)
     MaxDistance2 = MaxDistance(Sx, Sy, img_array2)
-    print(MaxDistance2)
-    print(Sx,Sy)
-#Cut
+    #Scneiden
     OberY = int(Sy - MaxDistance2)
     UnterY = int(Sy + MaxDistance2)
     LinksX = int(Sx - MaxDistance2)
     RechtsX = int(Sx + MaxDistance2)
     format_img = img_array2[LinksX:RechtsX,OberY:UnterY]
     return format_img
-def transformMatrix(format_img_rescale):
-	shape_format_img = np.shape(format_img)
+
+def transformMatrix(format_img):
+    shape_format_img = np.shape(format_img)
 	#Auf 20*20 skalieren
-	format_img_rescale = skimage.transform.rescale(format_img*255,20/shape_format_img[0])
-	img_0final = np.pad(format_img_rescale, 4,'constant', constant_values=(0))
+    format_img = skimage.transform.rescale(format_img*255,20/shape_format_img[0])
+    img_0final = np.pad(format_img, 4,'constant', constant_values=(0))
 	#4Pixel breiter Rand hinzufügen
-	img_0final = np.reshape(img_0final, 28*28)
+    img_0final = np.reshape(img_0final, 28*28)
 	#Werte anpassen zwischen 0-255
-	img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
+    img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
+    return(img_0final)
+
+
 
 img_array = readpicture()
 format_img = Cut(img_array)
-img_final=transformMatrix(format_img)
-
-
-# img_final = np.reshape(img_0final,(28,28))
-# plot.imshow(img_final, cmap='gray')
+img_final = transformMatrix(format_img)
+img_0final = np.reshape(img_final,(28,28))
+print(img_array)
+plot.imshow(img_array, cmap='gray')
 

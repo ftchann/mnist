@@ -23,14 +23,14 @@ class neuralNetwork:
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers):
         np.random.seed(1)#Seed festlegen
-		self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
+        self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
         self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
         self.output_neurons= numberof_output_neurons # Anzahl ausgabeneuronen
-        self.hidden_neurons_1 = self.hidden_neurons_5*self.hidden_layers # Anzahl hiddenneuronen Layer 1
+        self.hidden_neurons_5 = numberof_hidden_neurons # Anzahl hiddenneuronen Layer 5
+        self.hidden_neurons_1 = self.hidden_neurons_5 * self.hidden_layers # Anzahl hiddenneuronen Layer 1
         self.hidden_neurons_2 = self.hidden_neurons_5*(self.hidden_layers-1) # Anzahl hiddenneuronen Layer 2
         self.hidden_neurons_3 = self.hidden_neurons_5*(self.hidden_layers-2) # Anzahl hiddenneuronen Layer 3
         self.hidden_neurons_4 = self.hidden_neurons_5*(self.hidden_layers-3) # Anzahl hiddenneuronen Layer 4
-		self.hidden_neurons_5 = numberof_hidden_neurons # Anzahl hiddenneuronen Layer 5
 		#Alles 0 setzen. Behebt das Problem beim speichern, wenn nicht alle hidden layers genutzt werden.
         self.weight_hidden_output = 0
         self.weight_hidden_5_4 = 0
@@ -235,7 +235,7 @@ class neuralNetwork:
                 #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht immer vorne
                 targets[int(data[0])] = 1
                 self.train(inputs, targets)
-            performance = self.testnetwork(test_data_liste)  
+            performance = self.testnetwork(test_data_list)  
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
                 best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
@@ -264,7 +264,7 @@ def readdata(imgf, labelf, n):
     #Erste 16 bezieungsweise 8 bytes überspringen, da keine Daten drin sind. read() funktion springt immer auf das Nächste.
     images.read(16)
     label.read(8)
-    bilddata = []
+    imagedata = []
     #Ganze Datei durchgehen, n = anzahl bilder
     for i in range(n):
         #lesen und zwischenspeichern
