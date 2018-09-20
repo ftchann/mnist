@@ -149,7 +149,8 @@ class neuralNetwork:
             self.weight_hidden_1_input += self.lr * np.dot(hidden_1_error, inputs.T)
             
         else:
-            sys.exit("Error: Anzahl hiddenr Layers ungültig")
+            #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
+            sys.exit("Error: Anzahl hidden Layers ungültig")
             
             
     
