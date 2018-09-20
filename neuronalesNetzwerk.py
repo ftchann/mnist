@@ -13,7 +13,6 @@ numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
-
 #learningrate definieren
 learningrate = 0.1
 
@@ -23,6 +22,7 @@ class neuralNetwork:
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers):
         np.random.seed(1)#Seed festlegen
+        self.activ= 'sigmoid'
         self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
         self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
         self.output_neurons= numberof_output_neurons # Anzahl ausgabeneuronen
@@ -66,15 +66,30 @@ class neuralNetwork:
             self.weight_hidden_5_4 = np.random.normal(0.0,pow(self.hidden_neurons_5, -0.5),(self.hidden_neurons_5, self.hidden_neurons_4))
         #Learnrate
         self.lr = learningrate
-        #Aktivierungsfunktion
-		#Sigmoid Funktion
+    #Aktivierungsfunktionen
+	#Sigmoid Funktion
+    
+    
+    #WIE MACHT ME DAS SCHöner?
+    def activationfunktion(self,x):
+        return sigmoid(x)
     def sigmoid(self, x): 
         return 1 / (1 + np.exp(-x))
-        #Ableitung SigmoidFunktion
-    def sigmoid_derivate(self, x):
+    #Ableitung SigmoidFunktion
+    def sigmoid_derivative(self, x):
         return x*(1-x)
-                    
-        
+    #Tangenshyperbolicus funktion
+    def tanh(self, x):
+        #np.tanh(x)
+        return (np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x))
+    #Ableitung der Tangenshyperbolicus funktion               
+    def tanh_derivative(self,x):
+        return (1 - (x ** 2))
+    #Relu funktion
+    def relu(self,x):
+        return x * (x > 0)
+    def relu_derivative(self,x):
+        return 1 * (x > 0)
         
         
     #neuronales Netzwerk trainieren
@@ -89,9 +104,8 @@ class neuralNetwork:
             #Dies ist nur ein Experiment welche genauigkeit sich mit keinen hiddenn Layers erzielen lässt.
             output_inputs = np.dot(self.weight_hidden_output, inputs)
             output_outputs = self.sigmoid(output_inputs)
-            
             output_error = targets - output_outputs
-            self.weight_hidden_output += self.lr * np.dot(output_error * self.sigmoid_derivate(output_outputs), inputs.T)
+            self.weight_hidden_output += self.lr * np.dot(output_error * self.sigmoid_derivative(output_outputs), inputs.T)
             
         elif self.hidden_layers == 1: 
             #Eingabe mal Gewicht
@@ -105,9 +119,9 @@ class neuralNetwork:
         
            
             #ausgabefehler (Ziel-Ausgabe)
-            output_error = (targets - output_outputs) * self.sigmoid_derivate(output_outputs)
+            output_error = (targets - output_outputs) * self.sigmoid_derivative(output_outputs)
             #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
-            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.sigmoid_derivate(hidden_outputs)
+            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.sigmoid_derivative(hidden_outputs)
             #Gewichte aktuallisieren Versteckt-Ausgabe
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
             #Gewichte aktuallisieren Eingabe-Versteckt                            
@@ -129,12 +143,12 @@ class neuralNetwork:
             #output Layer
             output_outputs = self.sigmoid(np.dot(self.weight_hidden_output, hidden_5_outputs))
             
-            output_error = (targets - output_outputs) * self.sigmoid_derivate(output_outputs)
-            hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.sigmoid_derivate(hidden_5_outputs)
-            hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.sigmoid_derivate(hidden_4_outputs)
-            hidden_3_error = np.dot(self.weight_hidden_4_3.T, hidden_4_error) * self.sigmoid_derivate(hidden_3_outputs)
-            hidden_2_error = np.dot(self.weight_hidden_3_2.T, hidden_3_error) * self.sigmoid_derivate(hidden_2_outputs)
-            hidden_1_error = np.dot(self.weight_hidden_2_1.T, hidden_2_error) * self.sigmoid_derivate(hidden_1_outputs)
+            output_error = (targets - output_outputs) * self.sigmoid_derivative(output_outputs)
+            hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.sigmoid_derivative(hidden_5_outputs)
+            hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.sigmoid_derivative(hidden_4_outputs)
+            hidden_3_error = np.dot(self.weight_hidden_4_3.T, hidden_4_error) * self.sigmoid_derivative(hidden_3_outputs)
+            hidden_2_error = np.dot(self.weight_hidden_3_2.T, hidden_3_error) * self.sigmoid_derivative(hidden_2_outputs)
+            hidden_1_error = np.dot(self.weight_hidden_2_1.T, hidden_2_error) * self.sigmoid_derivative(hidden_1_outputs)
             #Gewichte aktualisieren Versteckt-Ausgabe
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_5_outputs.T)
             #Gewichte aktualisieren Versteckt_5-4
