@@ -12,7 +12,7 @@ numberof_input_neurons = 784
 numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 1
+numberof_hidden_layers = 0
 #learningrate definieren
 learningrate = 0.1
 
@@ -90,8 +90,12 @@ class neuralNetwork:
         return x * (x > 0)
     def relu_derivative(self,x):
         return 1 * (x > 0)
-        
-        
+    #Leaky ReLu
+    def lrelu(self,x):
+        return x * (x > 0) + 0.01 * x (x < 0)
+    def lrelu_derivative(self,x):
+        return (x > 0) + 0.01 * (x > 0)
+
     #neuronales Netzwerk trainieren
     def train(self, inputs_list, target_list,):
         #Inputsliste nehmen und transformieren damit sie hoch steht
@@ -253,7 +257,10 @@ class neuralNetwork:
             performance = self.testnetwork(test_data_list)  
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
-                best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
+                if self.hidden_layers > 0:
+                    best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
+                else:
+                    best_weight = self.weight_hidden_output
                 np.save("bestweight.npy", best_weight)
                 ite_without_imp = 0
                 #beste Gewichte     
