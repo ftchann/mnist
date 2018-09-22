@@ -15,14 +15,15 @@ numberof_output_neurons = 10
 numberof_hidden_layers = 0
 #learningrate definieren
 learningrate = 0.1
-
+#Aktivationfunktion
+activation_function = 'sigmoid'
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
     #neuronales Netzwerk inistialisieren
-    def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers):
+    def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function):
         np.random.seed(1)#Seed festlegen
-        self.activ= 'sigmoid'
+        self.function= activation_function
         self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
         self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
         self.output_neurons= numberof_output_neurons # Anzahl ausgabeneuronen
@@ -68,11 +69,6 @@ class neuralNetwork:
         self.lr = learningrate
     #Aktivierungsfunktionen
 	#Sigmoid Funktion
-    
-    
-    #WIE MACHT ME DAS SCHöner?
-    def activationfunktion(self,x):
-        return sigmoid(x)
     def sigmoid(self, x): 
         return 1 / (1 + np.exp(-x))
     #Ableitung SigmoidFunktion
@@ -88,14 +84,24 @@ class neuralNetwork:
     #Relu funktion
     def relu(self,x):
         return x * (x > 0)
+    #Ableitung Relu
     def relu_derivative(self,x):
         return 1 * (x > 0)
     #Leaky ReLu
     def lrelu(self,x):
-        return x * (x > 0) + 0.01 * x (x < 0)
+        return x * (x > 0) + 0.01 * x (x <= 0)
+    #Ableitung Lrelu
     def lrelu_derivative(self,x):
-        return (x > 0) + 0.01 * (x > 0)
+        return (x > 0) + 0.01 * (x <= 0)
+    #Aktivierungsfunktionsliste
+    activationfunction={'sigmoid':sigmoid, 'relu':relu, 'tanh':tanh, 'lrelu':lrelu}
+    #Liste der Ableitung der Aktivierungsfunktions
+    activationfunction_derivate={'sigmoid':sigmoid_derivative, 'relu':relu_derivative, 'tanh':tanh_derivative, 'lrelu':lrelu_derivative}
 
+    ####
+    ALLE SIGMOID MIT AKTIVATION FUNKTION ODER AKTIVATIONFUNKTIONDERIVATIVE ERSETZE
+    ####
+    
     #neuronales Netzwerk trainieren
     def train(self, inputs_list, target_list,):
         #Inputsliste nehmen und transformieren damit sie hoch steht
@@ -299,5 +305,5 @@ def readdata(imgf, labelf, n):
 
 #Neuronales Netzwerk erstellen.
 if __name__ == "__main__":
-    n = neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers)
+    n = neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function)
     n.trainnetwork()

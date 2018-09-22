@@ -14,8 +14,10 @@ numberof_output_neurons = 10
 numberof_hidden_layers = 1
 #learningrate definieren
 learningrate = 0.1
+#Aktivationfunktion
+activation_function = 'sigmoid'
 #Neuronales Netzwerk erstellen
-na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers)
+na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function)
 #Gewichte laden 
 weight = np.load("bestweight.npy")
 na.weight_hidden_1_input = weight[0]
@@ -26,7 +28,7 @@ na.weight_hidden_5_4 = weight[4]
 na.weight_hidden_output = weight[5]
 #Bild laden
 input_list = bs.img_final
-print(input_liste)
+print(input_list)
 #Ausgabe Matrix
 outputs = na.ask(input_list)
 print(outputs)

@@ -6,9 +6,10 @@ Created on Thu Sep 20 22:15:36 2018
 """
 
 import numpy as np
-b=np.arange(10)
-def ReLU(x):
-    
-    def linearx()
-    return x * (x > 5)
-print(ReLU(b))
+def sigmoid(x): 
+    return 1 / (1 + np.exp(-x))
+def relu(x):
+    return x * (x > 0)
+activationfunctionList={'sigmoid':sigmoid, 'relu':relu}
+activationfunction = 'relu'
+print(activationfunctionList[function](5))

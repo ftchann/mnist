@@ -13,10 +13,11 @@ numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
-
+#Aktivationfunktion
+activation_function = 'sigmoid'
 #learningrate definieren
 learningrate = 0.1
 
-n = nk.neuronalesNetzwerk(eingabeneuronen, versteckteneuronen, ausgabeneuronen, learnrate, verstecktelayer)
+n = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function)
 
 n.trainnetwork()
