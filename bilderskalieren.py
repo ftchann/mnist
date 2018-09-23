@@ -15,7 +15,7 @@ from skimage.filters import threshold_local
 
 def readpicture():
     #Daten in Grauwerten einlesen
-    img_array = skimage.io.imread('6.jpg',as_grey=True)
+    img_array = skimage.io.imread('2.jpg',as_grey=True)
     #Auf 255 erweitern 
     image= img_array*255
     #Treshholding
