@@ -15,9 +15,9 @@ numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
 #learningrate definieren
-learningrate = 0.1
+learningrate = 0.01
 #Aktivationfunktion
-activation_function = 'tanh'
+activation_function = 'relu'
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
@@ -33,20 +33,19 @@ class neuralNetwork:
         #np.tanh(x)
         return (np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x))
     #Ableitung der Tangenshyperbolicus funktion               
-    def tanh_derivative(self,x):
+    def tanh_derivative(self, x):
         return (1 - (x ** 2))
     #Relu funktion
-    def relu(self,x):
+    def relu(self, x):
         return x * (x > 0)
     #Ableitung Relu
-    def relu_derivative(self,x):
+    def relu_derivative(self, x):
         return 1 * (x > 0)
     #Leaky ReLu
-    def lrelu(self,x):
-        return (x * (x > 0)) + (0.01*x (x <= 0))
-    #Ableitung Lrelu
-    def lrelu_derivative(self,x):
-        return (x > 0) + 0.01 * (x <= 0)
+    def lrelu(self, x):
+        return x * (x > 0) + (x <= 0) * 0.01*x
+    def lrelu_derivative(self, x):
+        return 1 * (x > 0) + (x <= 0) * 0.01
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function):
         np.random.seed(1)#Seed festlegen

@@ -6,11 +6,9 @@ Created on Thu Sep 20 22:15:36 2018
 """
 
 import numpy as np
-def relu(x):
-    return x * (x > 0)
-def relu_derivative(x):
-    return 1 * (x > 0)
-a=np.arange(-5,5)
-print(a)
-print(relu(a))
-print(relu_derivative(a))
+import matplotlib.pyplot as plot
+np.random.seed(1)
+a=(np.random.normal(0.0,pow(20, -0.5),(20,1)))
+c=np.random.rand(20,1)
+d=np.sort(c)
+print(d)
