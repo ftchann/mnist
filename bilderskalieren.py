@@ -15,7 +15,11 @@ from skimage.filters import threshold_local
 
 def readpicture():
     #Daten in Grauwerten einlesen
+<<<<<<< HEAD
     img_array = skimage.io.imread('10.png',as_grey=True)
+=======
+    img_array = skimage.io.imread('6.jpg',as_grey=True)
+>>>>>>> 8191cbb216ef043dbfb4db21c9dfea278097ae9c
     #Auf 255 erweitern 
     image= img_array*255
     #Treshholding
@@ -97,10 +101,14 @@ img_final = transformMatrix(format_img)
 img_0final = np.reshape(img_final,(28,28))
 print(CenterofMass(img_0final))
 
+<<<<<<< HEAD
 #format_0img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
 #format_1img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
 #print(CenterofMass(format_0img))
 #print(CenterofMass(format_1img))
 #plot.imshow(format_0img, cmap='gray')
+=======
+
+>>>>>>> 8191cbb216ef043dbfb4db21c9dfea278097ae9c
 plot.imshow(img_0final, cmap='gray')
 
