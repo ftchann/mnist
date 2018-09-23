@@ -10,10 +10,10 @@ import sys
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
 numberof_input_neurons = 784
-numberof_hidden_neurons = 20
+numberof_hidden_neurons = 200
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 0
+numberof_hidden_layers = 1
 #learningrate definieren
 learningrate = 0.1
 #Aktivationfunktion
@@ -260,11 +260,15 @@ class neuralNetwork:
             performance = self.testnetwork(test_data_list)  
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
-                if self.hidden_layers > 0:
-                    best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
-                else:
+                if self.hidden_layers == 0:
                     best_weight = self.weight_hidden_output
-                np.save("bestweight.npy", best_weight)
+                    np.save("bestweight_1hiddenlayer.npy", best_weight)
+                if self.hidden_layers == 1:
+                    best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_output])
+                    np.save("bestweight_1hiddenlayer.npy", best_weight)
+                if self.hidden_layers == 5:
+                    best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
+                    np.save("bestweight_5hiddenlayer.npy", best_weight)
                 ite_without_imp = 0
                 #beste Gewichte     
                 #bestperformance neu setzen

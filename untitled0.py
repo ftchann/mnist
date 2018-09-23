@@ -6,10 +6,8 @@ Created on Thu Sep 20 22:15:36 2018
 """
 
 import numpy as np
-activationfunctionList={'sigmoid':sigmoid, 'relu':relu}
-activationfunction = 'relu'
-print(activationfunctionList[function](5))
-def sigmoid(x): 
-    return 1 / (1 + np.exp(-x))
-def relu(x):
-    return x * (x > 0)
+import skimage.io
+import matplotlib.pyplot as plot
+img_array2= skimage.io.imread('6.jpg', flatten=True)
+print(img_array2)
+plot.imshow(img_array2, cmap='gray')
