@@ -95,5 +95,5 @@ format_img = Cut(img_array)
 img_final = transformMatrix(format_img)
 img_0final = np.reshape(img_final,(28,28))
 print(img_array)
-plot.imshow(img_array, cmap='gray')
+plot.imshow(img_0final, cmap='gray')
 

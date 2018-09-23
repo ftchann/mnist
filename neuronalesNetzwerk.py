@@ -13,7 +13,7 @@ numberof_input_neurons = 784
 numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 0
+numberof_hidden_layers = 1
 #learningrate definieren
 learningrate = 0.1
 #Aktivationfunktion

@@ -30,7 +30,7 @@ na.weight_hidden_output = weight[5]
 input_list = bs.img_final
 print(input_list)
 #Ausgabe Matrix
-outputs = na.ask(input_list)
+outputs = na.asknetwork(input_list)
 print(outputs)
 Number = np.argmax(outputs)
 #Zahl ausgeben
