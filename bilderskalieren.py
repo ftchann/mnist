@@ -94,5 +94,9 @@ img_array = readpicture()
 format_img = Cut(img_array)
 img_final = transformMatrix(format_img)
 img_0final = np.reshape(img_final,(28,28))
+<<<<<<< HEAD
+=======
+print(img_array)
+>>>>>>> cb2f25aeb1ed34519483305ccf85aadfe7c27cb1
 plot.imshow(img_0final, cmap='gray')
 
