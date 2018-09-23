@@ -15,7 +15,7 @@ from skimage.filters import threshold_local
 
 def readpicture():
     #Daten in Grauwerten einlesen
-    img_array = skimage.io.imread('2.jpg',as_grey=True)
+    img_array = skimage.io.imread('10.png',as_grey=True)
     #Auf 255 erweitern 
     image= img_array*255
     #Treshholding
@@ -80,7 +80,8 @@ def Cut(img_array2):
 def transformMatrix(format_img):
     shape_format_img = np.shape(format_img)
 	#Auf 20*20 skalieren
-    format_img = skimage.transform.rescale(format_img*255,20/shape_format_img[0])
+    #format_img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
+    format_img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
     img_0final = np.pad(format_img, 4,'constant', constant_values=(0))
 	#4Pixel breiter Rand hinzufügen
     img_0final = np.reshape(img_0final, 28*28)
@@ -94,8 +95,12 @@ img_array = readpicture()
 format_img = Cut(img_array)
 img_final = transformMatrix(format_img)
 img_0final = np.reshape(img_final,(28,28))
+print(CenterofMass(img_0final))
 
-print(img_array)
-
+#format_0img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
+#format_1img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
+#print(CenterofMass(format_0img))
+#print(CenterofMass(format_1img))
+#plot.imshow(format_0img, cmap='gray')
 plot.imshow(img_0final, cmap='gray')
 
