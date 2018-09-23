@@ -6,8 +6,11 @@ Created on Thu Sep 20 22:15:36 2018
 """
 
 import numpy as np
-import skimage.io
-import matplotlib.pyplot as plot
-img_array2= skimage.io.imread('6.jpg', flatten=True)
-print(img_array2)
-plot.imshow(img_array2, cmap='gray')
+def relu(x):
+    return x * (x > 0)
+def relu_derivative(x):
+    return 1 * (x > 0)
+a=np.arange(-5,5)
+print(a)
+print(relu(a))
+print(relu_derivative(a))

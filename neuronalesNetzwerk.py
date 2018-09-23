@@ -10,14 +10,14 @@ import sys
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
 numberof_input_neurons = 784
-numberof_hidden_neurons = 200
+numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
 #learningrate definieren
 learningrate = 0.1
 #Aktivationfunktion
-activation_function = 'sigmoid'
+activation_function = 'tanh'
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
@@ -43,14 +43,14 @@ class neuralNetwork:
         return 1 * (x > 0)
     #Leaky ReLu
     def lrelu(self,x):
-        return x * (x > 0) + 0.01 * x (x <= 0)
+        return (x * (x > 0)) + (0.01*x (x <= 0))
     #Ableitung Lrelu
     def lrelu_derivative(self,x):
         return (x > 0) + 0.01 * (x <= 0)
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function):
         np.random.seed(1)#Seed festlegen
-        self.function= activation_function
+        self.function = activation_function
         self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
         self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
         self.output_neurons= numberof_output_neurons # Anzahl ausgabeneuronen
@@ -110,25 +110,25 @@ class neuralNetwork:
             #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten.
             #Dies ist nur ein Experiment welche genauigkeit sich mit keinen hiddenn Layers erzielen lässt.
             output_inputs = np.dot(self.weight_hidden_output, inputs)
-            output_outputs = self.activationfunction[activation_function](output_inputs)
+            output_outputs = self.activationfunction[self.function](output_inputs)
             output_error = targets - output_outputs
-            self.weight_hidden_output += self.lr * np.dot(output_error * self.activationfunction_derivative[activation_function](output_outputs), inputs.T)
+            self.weight_hidden_output += self.lr * np.dot(output_error * self.activationfunction_derivative[self.function](output_outputs), inputs.T)
             
         elif self.hidden_layers == 1: 
             #Eingabe mal Gewicht
             hidden_inputs = np.dot(self.weight_hidden_1_input, inputs)
             #Das ganze in die Aktivierungsfunktion
-            hidden_outputs = self.activationfunction[activation_function](hidden_inputs)
+            hidden_outputs = self.activationfunction[self.function](hidden_inputs)
             #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix
             output_inputs = np.dot(self.weight_hidden_output, hidden_outputs)
             #Das ganze in die Aktivierungsfunktion
-            output_outputs = self.activationfunction[activation_function](output_inputs)    
+            output_outputs = self.activationfunction[self.function](output_inputs)    
         
            
             #ausgabefehler (Ziel-Ausgabe)
-            output_error = (targets - output_outputs) * self.activationfunction_derivative[activation_function](output_outputs)
+            output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
             #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
-            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[activation_function](hidden_outputs)
+            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_outputs)
             #Gewichte aktuallisieren Versteckt-Ausgabe
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
             #Gewichte aktuallisieren Eingabe-Versteckt                            
@@ -138,24 +138,24 @@ class neuralNetwork:
         elif self.hidden_layers == 5:
 			#Analog zu hidden_layers==1
             #hiddens Layer 1
-            hidden_1_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_1_input, inputs))
+            hidden_1_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
             #hiddens Layer 2  
-            hidden_2_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_2_1, hidden_1_outputs))
+            hidden_2_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_2_1, hidden_1_outputs))
             #hiddens Layer 3
-            hidden_3_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_3_2, hidden_2_outputs))
+            hidden_3_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_3_2, hidden_2_outputs))
             #hiddens Layer 4
-            hidden_4_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_4_3, hidden_3_outputs))
+            hidden_4_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_4_3, hidden_3_outputs))
             #hiddens Layer 5
-            hidden_5_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
+            hidden_5_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
             #output Layer
-            output_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_output, hidden_5_outputs))
+            output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs))
             
-            output_error = (targets - output_outputs) * self.activationfunction_derivative[activation_function](output_outputs)
-            hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[activation_function](hidden_5_outputs)
-            hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.activationfunction_derivative[activation_function](hidden_4_outputs)
-            hidden_3_error = np.dot(self.weight_hidden_4_3.T, hidden_4_error) * self.activationfunction_derivative[activation_function](hidden_3_outputs)
-            hidden_2_error = np.dot(self.weight_hidden_3_2.T, hidden_3_error) * self.activationfunction_derivative[activation_function](hidden_2_outputs)
-            hidden_1_error = np.dot(self.weight_hidden_2_1.T, hidden_2_error) * self.activationfunction_derivative[activation_function](hidden_1_outputs)
+            output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
+            hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_5_outputs)
+            hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.activationfunction_derivative[self.function](hidden_4_outputs)
+            hidden_3_error = np.dot(self.weight_hidden_4_3.T, hidden_4_error) * self.activationfunction_derivative[self.function](hidden_3_outputs)
+            hidden_2_error = np.dot(self.weight_hidden_3_2.T, hidden_3_error) * self.activationfunction_derivative[self.function](hidden_2_outputs)
+            hidden_1_error = np.dot(self.weight_hidden_2_1.T, hidden_2_error) * self.activationfunction_derivative[self.function](hidden_1_outputs)
             #Gewichte aktualisieren Versteckt-Ausgabe
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_5_outputs.T)
             #Gewichte aktualisieren Versteckt_5-4
@@ -183,29 +183,29 @@ class neuralNetwork:
         #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten
         if self.hidden_layers == 0:
             output_inputs = np.dot(self.weight_hidden_output, inputs)
-            output_outputs = self.activationfunction[activation_function](output_inputs)
+            output_outputs = self.activationfunction[self.function](output_inputs)
             return output_outputs
         if self.hidden_layers == 1:    
            
             #Inputs mal Gewicht
             hidden_inputs = np.dot(self.weight_hidden_1_input, inputs)
             #Das ganze in die Aktivierungsfunktion
-            hidden_outputs = self.activationfunction[activation_function](hidden_inputs)
+            hidden_outputs = self.activationfunction[self.function](hidden_inputs)
             #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix
             output_inputs = np.dot(self.weight_hidden_output, hidden_outputs)
             #Das ganze in die Aktivierungsfunktion
-            output_outputs = self.activationfunction[activation_function](output_inputs)
+            output_outputs = self.activationfunction[self.function](output_inputs)
         
             return output_outputs
         
         if self.hidden_layers == 5:
             #Versteckte Ausgaben berechnen analog wie bei hidden_layers=1
-            hidden_1_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_1_input, inputs))
-            hidden_2_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_2_1, hidden_1_outputs))
-            hidden_3_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_3_2, hidden_2_outputs))
-            hidden_4_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_4_3, hidden_3_outputs))
-            hidden_5_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
-            output_outputs = self.activationfunction[activation_function](np.dot(self.weight_hidden_output, hidden_5_outputs))
+            hidden_1_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
+            hidden_2_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_2_1, hidden_1_outputs))
+            hidden_3_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_3_2, hidden_2_outputs))
+            hidden_4_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_4_3, hidden_3_outputs))
+            hidden_5_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
+            output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs))
 
             return output_outputs
             
