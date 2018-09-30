@@ -30,7 +30,7 @@ def readpicture(path):
     else:
         maxwh = shape_img[1]
         #Bild um maxwh (Die Hälfte der Breite oder Länge) erweitern, damit man immer um Quadrat um das Objekt Cut kann.
-    img_array2 = np.pad(img_array2, int(maxwh),'constant', constant_values=0)
+    img_array2 = np.pad(img_array2, int(maxwh/2),'constant', constant_values=0)
     return img_array2
 
 def CenterofMass(image):
@@ -68,11 +68,12 @@ def MaxDistance(Sxa, Sya, image):
 def Cut(img_array2):
     Sx, Sy = CenterofMass(img_array2)
     MaxDistance2 = MaxDistance(Sx, Sy, img_array2)
-    #Scneiden
+    #Schneiden
     OberY = int(Sy - MaxDistance2)
     UnterY = int(Sy + MaxDistance2)
     LinksX = int(Sx - MaxDistance2)
     RechtsX = int(Sx + MaxDistance2)
+    #Neue Matrix mit diesen Rändern.
     format_img = img_array2[LinksX:RechtsX,OberY:UnterY]
     return format_img
 
@@ -106,4 +107,3 @@ print(CenterofMass(img_0final))
 
 
 plot.imshow(img_0final, cmap='gray')
-
