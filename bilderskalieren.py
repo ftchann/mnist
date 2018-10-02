@@ -82,8 +82,9 @@ def transformMatrix(format_img):
 	#Auf 20*20 skalieren
     format_img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
     #format_img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
+    #4Pixel breiter Rand hinzufügen
     img_0final = np.pad(format_img, 4,'constant', constant_values=(0))
-	#4Pixel breiter Rand hinzufügen
+    #In Vektor umwandeln 1 * 784
     img_0final = np.reshape(img_0final, 28*28)
 	#Werte anpassen zwischen 0-255
     img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
