@@ -16,12 +16,12 @@ numberof_output_neurons = 10
 numberof_hidden_layers = 1
 #learningrate definieren
 learningrate = 0.2
-#Aktivationfunktion
+#Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu))
 activation_function = 'sigmoid'
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
-    #Aktivierungsfunktionen
+    #Aktivierungsfunktionen:
 	#Sigmoid Funktion
     def sigmoid(self, x): 
         return 1 / (1 + np.exp(-x))
@@ -30,7 +30,7 @@ class neuralNetwork:
         return x*(1-x)
     #Tangenshyperbolicus funktion
     def tanh(self, x):
-        #np.tanh(x)
+        #Es könnte auch np.tanh(x) verwendet werden
         return (np.exp(x)-np.exp(-x))/(np.exp(x)+np.exp(-x))
     #Ableitung der Tangenshyperbolicus funktion               
     def tanh_derivative(self, x):
@@ -44,11 +44,16 @@ class neuralNetwork:
     #Leaky ReLu
     def lrelu(self, x):
         return x * (x > 0) + (x <= 0) * 0.01*x
+    #Ableitung leaky ReLu
     def lrelu_derivative(self, x):
         return 1 * (x > 0) + (x <= 0) * 0.01
+    
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function):
-        np.random.seed(1)#Seed festlegen
+        np.random.seed(1)#Seed  für random funktion festlegen
+        #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variavlen erstellt
+        
+        self.lr = learningrate # Lernrate
         self.function = activation_function
         self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
         self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
@@ -91,8 +96,7 @@ class neuralNetwork:
             
         if self.hidden_layers >= 5:
             self.weight_hidden_5_4 = np.random.normal(0.0,pow(self.hidden_neurons_5, -0.5),(self.hidden_neurons_5, self.hidden_neurons_4))
-        #Learnrate
-        self.lr = learningrate
+        
         #Aktivierungsfunktionsliste
         self.activationfunction={'sigmoid':self.sigmoid, 'relu':self.relu, 'tanh':self.tanh, 'lrelu':self.lrelu}
         #Liste der Ableitung der Aktivierungsfunktions
