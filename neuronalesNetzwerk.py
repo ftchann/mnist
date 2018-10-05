@@ -10,14 +10,14 @@ import sys
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
 numberof_input_neurons = 784
-numberof_hidden_neurons = 20
+numberof_hidden_neurons = 50
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
 #learningrate definieren
-learningrate = 0.01
+learningrate = 0.2
 #Aktivationfunktion
-activation_function = 'lrelu'
+activation_function = 'sigmoid'
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
@@ -99,41 +99,25 @@ class neuralNetwork:
         self.activationfunction_derivative={'sigmoid':self.sigmoid_derivative, 'relu':self.relu_derivative, 'tanh':self.tanh_derivative, 'lrelu':self.lrelu_derivative}
     
     #neuronales Netzwerk trainieren
-    def train(self, inputs_list, target_list,):
+    def forwardprop(self, inputs_list):
         #Inputsliste nehmen und transformieren damit sie hoch steht
         inputs = np.array(inputs_list, ndmin=2).T
-        #Das Gleiche mit der Zielliste
-        targets = np.array(target_list, ndmin=2).T
         
         if self.hidden_layers == 0:
             #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten.
             #Dies ist nur ein Experiment welche genauigkeit sich mit keinen hiddenn Layers erzielen lässt.
-            output_inputs = np.dot(self.weight_hidden_output, inputs)
-            output_outputs = self.activationfunction[self.function](output_inputs)
-            output_error = targets - output_outputs
-            self.weight_hidden_output += self.lr * np.dot(output_error * self.activationfunction_derivative[self.function](output_outputs), inputs.T)
+            output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, inputs))
             
-        elif self.hidden_layers == 1: 
-            #Eingabe mal Gewicht
-            hidden_inputs = np.dot(self.weight_hidden_1_input, inputs)
-            #Das ganze in die Aktivierungsfunktion
-            hidden_outputs = self.activationfunction[self.function](hidden_inputs)
-            #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix
-            output_inputs = np.dot(self.weight_hidden_output, hidden_outputs)
-            #Das ganze in die Aktivierungsfunktion
-            output_outputs = self.activationfunction[self.function](output_inputs)    
-        
+            return output_outputs
+            
+        elif self.hidden_layers == 1:   
+            #Eingabe mal Gewicht und dann das ganze in die Aktivierungsfunktion
+            hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
+            #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix und dann das ganze in die Aktivierungsfunktion
+            output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_outputs))
+            
+            return output_outputs, hidden_outputs
            
-            #ausgabefehler (Ziel-Ausgabe)
-            output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
-            #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
-            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_outputs)
-            #Gewichte aktuallisieren Versteckt-Ausgabe
-            self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
-            #Gewichte aktuallisieren Eingabe-Versteckt                            
-            self.weight_hidden_1_input += self.lr * np.dot(hidden_error, inputs.T)                     
-            
-        
         elif self.hidden_layers == 5:
 			#Analog zu hidden_layers==1
             #hiddens Layer 1
@@ -149,6 +133,42 @@ class neuralNetwork:
             #output Layer
             output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs))
             
+            return output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs
+        else:
+            #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
+            sys.exit("Error: Anzahl hidden Layers ungültig")
+            
+            
+    def backprop(self, inputs_list, targets_list):
+        #analog zum importieren der input Liste 
+        targets = np.array(targets_list, ndmin=2).T
+        inputs = np.array(inputs_list, ndmin=2).T
+        if self.hidden_layers == 0:
+            
+            output_outputs = self.forwardprop(inputs_list)
+            
+            #Die abweichung
+            output_error = targets - output_outputs
+            
+            self.weight_hidden_output += self.lr * np.dot(output_error * self.activationfunction_derivative[self.function](output_outputs), inputs.T)
+            
+        if self.hidden_layers == 1:
+            
+            output_outputs, hidden_outputs = self.forwardprop(inputs_list)
+            
+            #ausgabefehler (Ziel-Ausgabe)
+            output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
+            #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
+            hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_outputs)
+            #Gewichte aktuallisieren Versteckt-Ausgabe
+            self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
+            #Gewichte aktuallisieren Eingabe-Versteckt                            
+            self.weight_hidden_1_input += self.lr * np.dot(hidden_error, inputs.T)
+                                                           
+        if self.hidden_layers == 5:
+            
+            output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs = self.forwardprop(inputs_list)
+            #analog zu Hiddenlayers = 1 berechnung des Fehlers
             output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
             hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_5_outputs)
             hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.activationfunction_derivative[self.function](hidden_4_outputs)
@@ -167,13 +187,6 @@ class neuralNetwork:
             self.weight_hidden_2_1 += self.lr * np.dot(hidden_2_error, hidden_1_outputs.T)
             #Gewichte aktualisieren Versteckt1-Eingabe
             self.weight_hidden_1_input += self.lr * np.dot(hidden_1_error, inputs.T)
-            
-        else:
-            #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
-            sys.exit("Error: Anzahl hidden Layers ungültig")
-            
-            
-    
             
     #neuronales Netzwerk abfragen ähnlich wie neuronales Netzwerk trainieren
     def asknetwork(self, inputs_list):
@@ -255,7 +268,7 @@ class neuralNetwork:
                 targets = np.zeros(numberof_output_neurons) 
                 #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht immer vorne
                 targets[int(data[0])] = 1
-                self.train(inputs, targets)
+                self.backprop(inputs, targets)
             performance = self.testnetwork(test_data_list)  
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
