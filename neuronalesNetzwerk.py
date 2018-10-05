@@ -98,7 +98,7 @@ class neuralNetwork:
         #Liste der Ableitung der Aktivierungsfunktions
         self.activationfunction_derivative={'sigmoid':self.sigmoid_derivative, 'relu':self.relu_derivative, 'tanh':self.tanh_derivative, 'lrelu':self.lrelu_derivative}
     
-    #neuronales Netzwerk trainieren
+    #macht die forward Propagation mit einer input Liste
     def forwardprop(self, inputs_list):
         #Inputsliste nehmen und transformieren damit sie hoch steht
         inputs = np.array(inputs_list, ndmin=2).T
