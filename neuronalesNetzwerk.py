@@ -188,38 +188,6 @@ class neuralNetwork:
             #Gewichte aktualisieren Versteckt1-Eingabe
             self.weight_hidden_1_input += self.lr * np.dot(hidden_1_error, inputs.T)
             
-    #neuronales Netzwerk abfragen ähnlich wie neuronales Netzwerk trainieren
-    def asknetwork(self, inputs_list):
-        #Inputsliste nehmen und transformieren damit sie hoch steht
-        inputs = np.array(inputs_list, ndmin=2).T
-        #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten
-        if self.hidden_layers == 0:
-            output_inputs = np.dot(self.weight_hidden_output, inputs)
-            output_outputs = self.activationfunction[self.function](output_inputs)
-            return output_outputs
-        if self.hidden_layers == 1:    
-           
-            #Inputs mal Gewicht
-            hidden_inputs = np.dot(self.weight_hidden_1_input, inputs)
-            #Das ganze in die Aktivierungsfunktion
-            hidden_outputs = self.activationfunction[self.function](hidden_inputs)
-            #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix
-            output_inputs = np.dot(self.weight_hidden_output, hidden_outputs)
-            #Das ganze in die Aktivierungsfunktion
-            output_outputs = self.activationfunction[self.function](output_inputs)
-        
-            return output_outputs
-        
-        if self.hidden_layers == 5:
-            #Versteckte Ausgaben berechnen analog wie bei hidden_layers=1
-            hidden_1_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
-            hidden_2_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_2_1, hidden_1_outputs))
-            hidden_3_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_3_2, hidden_2_outputs))
-            hidden_4_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_4_3, hidden_3_outputs))
-            hidden_5_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
-            output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs))
-
-            return output_outputs
             
     def testnetwork(self, testdatalist):
     #Performance Richtige, Versuche
@@ -233,7 +201,7 @@ class neuralNetwork:
             inputs = (np.asfarray(data[1:]) / 255.0)
             rightnumber = int(data[0])
         #Zeil kreieren
-            outputs = self.asknetwork(inputs)
+            outputs, _ = self.forwardprop(inputs)
             Zahl = np.argmax(outputs)
         
             if(Zahl==rightnumber):
