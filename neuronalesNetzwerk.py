@@ -13,9 +13,9 @@ numberof_input_neurons = 784
 numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 0
+numberof_hidden_layers = 1
 #learningrate definieren
-learningrate = 0.2
+learningrate = 0.1
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu))
 activation_function = 'sigmoid'
 #True
@@ -54,7 +54,7 @@ class neuralNetwork:
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias):
         np.random.seed(1)#Seed  für random funktion festlegen
         #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variavlen erstellt
-        self.bias=bias#Lernrate  
+        self.bias=bias#Bias 
         self.lr = learningrate # Lernrate
         self.function = activation_function#Aktivierungsfunktion
         self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
@@ -78,33 +78,34 @@ class neuralNetwork:
         #Gewichte Versteckte-Outputlayer
         if self.hidden_layers == 0:
             self.weight_hidden_output = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, self.input_neurons))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_output_bias = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, 1))
         if self.hidden_layers > 0:
             self.weight_hidden_output = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, self.hidden_neurons_5))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_output_bias = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, 1))
         #Gewichte Hiddenlayer 1 - 5
         #Im Moment haben alle Verstecktenlayers die selbe Anzahl Neuronen numberof_hidden_neurons * numberof_hidden_layers
         if self.hidden_layers >= 1:
             self.weight_hidden_1_input = np.random.normal(0.0,pow(self.hidden_neurons_1, -0.5),(self.hidden_neurons_1, self.input_neurons))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_1_input_bias = np.random.normal(0.0,pow(self.hidden_neurons_1, -0.5),(self.hidden_neurons_1, 1))
+                print(self.weights_hidden_1_input_bias)
         if self.hidden_layers >= 2:
             self.weight_hidden_2_1 = np.random.normal(0.0,pow(self.hidden_neurons_2, -0.5),(self.hidden_neurons_2, self.hidden_neurons_1))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_2_1_bias = np.random.normal(0.0,pow(self.hidden_neurons_2, -0.5),(self.hidden_neurons_2, 1))
         if self.hidden_layers >= 3:
             self.weight_hidden_3_2 = np.random.normal(0.0,pow(self.hidden_neurons_3, -0.5),(self.hidden_neurons_3, self.hidden_neurons_2))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_3_2_bias = np.random.normal(0.0,pow(self.hidden_neurons_3, -0.5),(self.hidden_neurons_3, 1))
         if self.hidden_layers >= 4:
             self.weight_hidden_4_3 = np.random.normal(0.0,pow(self.hidden_neurons_4, -0.5),(self.hidden_neurons_4, self.hidden_neurons_3))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_4_3_bias = np.random.normal(0.0,pow(self.hidden_neurons_4, -0.5),(self.hidden_neurons_4, 1))
         if self.hidden_layers >= 5:
             self.weight_hidden_5_4 = np.random.normal(0.0,pow(self.hidden_neurons_5, -0.5),(self.hidden_neurons_5, self.hidden_neurons_4))
-            if bias ==True:
+            if self.bias ==True:
                 self.weights_hidden_5_4_bias = np.random.normal(0.0,pow(self.hidden_neurons_1, -0.5),(self.hidden_neurons_5, 1))
         #Aktivierungsfunktionsliste
         self.activationfunction={'sigmoid':self.sigmoid, 'relu':self.relu, 'tanh':self.tanh, 'lrelu':self.lrelu}
@@ -120,7 +121,7 @@ class neuralNetwork:
             #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten.
             #Dies ist nur ein Experiment welche genauigkeit sich mit keinen hiddenn Layers erzielen lässt.
             output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, inputs))
-            if bias == True:
+            if self.bias == True:
                  output_outputs += self.weights_hidden_output_bias
             return output_outputs
             
@@ -129,9 +130,11 @@ class neuralNetwork:
             hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
             #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix und dann das ganze in die Aktivierungsfunktion
             output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_outputs))
-            
+            if self.bias == True:
+                hidden_outputs += self.weights_hidden_1_input_bias
+                output_outputs += self.weights_hidden_output_bias
             return output_outputs, hidden_outputs
-           
+               
         elif self.hidden_layers == 5:
 			#Analog zu hidden_layers==1
             #hiddens Layer 1
@@ -146,7 +149,13 @@ class neuralNetwork:
             hidden_5_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
             #output Layer
             output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs))
-            
+            if bias == True:
+                hidden_1_outputs += self.weights_hidden_1_input_bias
+                hidden_2_outputs += self.weight_hidden_2_1_bias
+                hidden_3_outputs += self.weight_hidden_3_2_bias
+                hidden_4_outputs += self.weight_hidden_4_3_bias
+                hidden_5_outputs += self.weight_hidden_5_4_bias
+                output_outputs += self.weights_hidden_output_bias
             return output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs
         else:
             #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
@@ -165,7 +174,8 @@ class neuralNetwork:
             output_error = targets - output_outputs
             
             self.weight_hidden_output += self.lr * np.dot(output_error * self.activationfunction_derivative[self.function](output_outputs), inputs.T)
-            
+            if bias == True:
+                self.weights_hidden_output_bias += self.lr * output_error * self.activationfunction_derivative[self.function](output_outputs)
         if self.hidden_layers == 1:
             
             output_outputs, hidden_outputs = self.forwardprop(inputs_list)
@@ -178,7 +188,9 @@ class neuralNetwork:
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
             #Gewichte aktuallisieren Eingabe-Versteckt                            
             self.weight_hidden_1_input += self.lr * np.dot(hidden_error, inputs.T)
-                                                           
+            if bias == True:
+                self.weights_hidden_1_input_bias = self.lr * np.dot(self.weight_hidden_output.T, output_error)
+                self.weights_hidden_output_bias = self.lr * (targets-output_outputs)                                       
         if self.hidden_layers == 5:
             
             output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs = self.forwardprop(inputs_list)
