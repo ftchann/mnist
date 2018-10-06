@@ -18,8 +18,8 @@ numberof_hidden_layers = 0
 learningrate = 0.1
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu))
 activation_function = 'sigmoid'
-#Verzerrung
-bias=False
+#Verzerrung (Bias ein- und ausschalten)
+bias = False
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
@@ -52,8 +52,8 @@ class neuralNetwork:
     
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias):
-        np.random.seed(1)#Seed  für random funktion festlegen
-        #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variavlen erstellt
+        np.random.seed(1)#Seed  für random funktion festlegen (damit gibt die np.random bei jedem Durchgang die gleichen Zahlen aus)
+        #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variablen erstellt
         self.bias=bias#Bias 
         self.lr = learningrate # Lernrate
         self.function = activation_function#Aktivierungsfunktion
