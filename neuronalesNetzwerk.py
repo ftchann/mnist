@@ -13,13 +13,13 @@ numberof_input_neurons = 784
 numberof_hidden_neurons = 20
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 1
+numberof_hidden_layers = 0
 #learningrate definieren
 learningrate = 0.1
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu))
 activation_function = 'sigmoid'
-#Verzerrung
-bias=True
+#Verzerrung (Bias ein- und ausschalten)
+bias = False
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
@@ -52,8 +52,8 @@ class neuralNetwork:
     
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias):
-        np.random.seed(1)#Seed  für random funktion festlegen
-        #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variavlen erstellt
+        np.random.seed(1)#Seed  für random funktion festlegen (damit gibt die np.random bei jedem Durchgang die gleichen Zahlen aus)
+        #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variablen erstellt
         self.bias=bias#Bias 
         self.lr = learningrate # Lernrate
         self.function = activation_function#Aktivierungsfunktion
@@ -175,7 +175,7 @@ class neuralNetwork:
             #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
             sys.exit("Error: Anzahl hidden Layers ungültig")
             
-            
+        
     def backprop(self, inputs_list, targets_list):
         #analog zum importieren der input Liste 
         targets = np.array(targets_list, ndmin=2).T
@@ -232,6 +232,8 @@ class neuralNetwork:
                 self.weights_hidden_3_2_bias +=hidden_3_error
                 self.weights_hidden_2_1_bias +=hidden_2_error
                 self.weights_hidden_1_input_bias += hidden_1_error
+   
+    
     def testnetwork(self, testdatalist):
     #Performance Richtige, Versuche
         Right = 0
@@ -244,14 +246,20 @@ class neuralNetwork:
             inputs = (np.asfarray(data[1:]) / 255.0)
             rightnumber = int(data[0])
         #Zeil kreieren
-            outputs = self.forwardprop(inputs)[0]
+            #Nimmt nur das erste Element aus dem return der Funktion forwardprop
+            #Die Unterteilung zwischen 0 und 1+ Hidden Layers ist nötig,
+            #weil das Programm sonst nicht das 0te Element bei nur einem return zu nehmen
+            if self.hidden_layers == 0:
+                outputs = self.forwardprop(inputs)
+            else:
+                outputs = self.forwardprop(inputs)[0]
             Zahl = np.argmax(outputs)
-        
-            if(Zahl==rightnumber):
+            #Vergleich errechnete und soll Zahl
+            if(Zahl == rightnumber):
                 Right += 1
                 Tries += 1
             else:
-                Tries +=1
+                Tries += 1
                 
      
     #performance ausgeben
@@ -285,7 +293,7 @@ class neuralNetwork:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
                 if self.hidden_layers == 0:
                     best_weight = self.weight_hidden_output
-                    np.save("bestweight_1hiddenlayer.npy", best_weight)
+                    np.save("bestweight_0hiddenlayer.npy", best_weight)
                 if self.hidden_layers == 1:
                     best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_output])
                     np.save("bestweight_1hiddenlayer.npy", best_weight)
