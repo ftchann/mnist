@@ -7,6 +7,8 @@ Created on Sun Oct  7 14:31:57 2018
 import turtle
 import numpy as np
 from scipy import interpolate
+def f(x):
+    return  (1794177113)/(17629210667724609375)* ((x+20.5)**6) +(-103212350777)/(1175280711181640625)*(x+20.5)**5+(8526957806083)/(313408189648437500)*(x+20.5)**4+(-20072634193622)/(5641347413671875)*(x+20.5)**3+(29542259959363)/(180523117237500)*(x+20.5)**2+(435596617)/(28883698758)*(x+20.5)+185
 def drawarrow(x,y,direction):
     if direction==180:
         turtle.begin_fill()
@@ -74,7 +76,7 @@ def createcoor():
     turtle.write("E")
 x=np.array([54,-1,96,128,151,214,250,300])
 y=np.array([92,162,135,150,150,200,223,240])
-f=interpolate.interp1d(x,y,kind=7)
+#f=interpolate.interp1d(x,y,kind=7)
 
 createcoor()
 turtle.goto(0,0)
@@ -83,29 +85,46 @@ for i in range(300):
     turtle.goto(i,f(i))
 
 turtle.penup()
-turtle.goto(15,73)
+turtle.goto(285,10)
 turtle.write("globales Minimum")
-turtle.goto(125,130)
-turtle.write("Sattelstelle")
+turtle.goto(105,105)
+turtle.write("lokales Minimum")
 #turtle.goto(192,112)
 #turtle.write("lokales Minimum")
 turtle.color("red")
-turtle.goto(165,155)
+turtle.goto(298,f(298))
 turtle.pd()
 turtle.seth(180)
 turtle.fd(10)
 xn,yn=turtle.position()
 drawarrow(xn,yn,180)
-turtle.pu()
-turtle.goto(140,155)
-turtle.pd()
-turtle.pd()
-turtle.seth(180)
-turtle.fd(10)
+turtle.goto(278,f(278)+10)
+turtle.seth(270)
+xn,yn=turtle.position()
+drawarrow(xn,yn,270)
+turtle.right(90)
+turtle.fd(70)
 xn,yn=turtle.position()
 drawarrow(xn,yn,180)
-
-
+turtle.goto(198,f(198)-10)
+turtle.seth(90)
+xn,yn=turtle.position()
+drawarrow(xn,yn,90)
+turtle.left(90)
+turtle.fd(28)
+xn,yn=turtle.position()
+drawarrow(xn,yn,180)
+turtle.goto(160,f(160)+10)
+turtle.seth(90)
+xn,yn=turtle.position()
+drawarrow(xn,yn,270)
+turtle.right(90)
+turtle.fd(27)
+xn,yn=turtle.position()
+drawarrow(xn,yn,180)
+turtle.goto(123,f(123)+10)
+xn,yn=turtle.position()
+drawarrow(xn,yn,270)
 
 turtle.pu()
 turtle.goto(1000,1000)
