@@ -6,18 +6,20 @@ Created on Sun Jun 10 18:16:22 2018
 import numpy as np
 import time
 import sys
+import xlwt
+
 
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
 numberof_input_neurons = 784
-numberof_hidden_neurons = 20
+numberof_hidden_neurons = 100
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 0
+numberof_hidden_layers = 1
 #learningrate definieren
-learningrate = 0.1
+learningrate = 0.01
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu))
-activation_function = 'sigmoid'
+activation_function = 'lrelu'
 #Verzerrung (Bias ein- und ausschalten)
 bias = False
 
@@ -273,11 +275,12 @@ class neuralNetwork:
         bestperformance = 0
         ite_without_imp = 0
         iterations = 0
+        line = 1
          #datei öffnen trainingsdaten
         training_data_list = readdata("Trainingsdaten/train-images.idx3-ubyte", "Trainingsdaten/train-labels.idx1-ubyte", 60000)
         #datei öffnen testdaten
         test_data_list = readdata("Trainingsdaten/t10k-images.idx3-ubyte", "Trainingsdaten/t10k-labels.idx1-ubyte", 10000)
-        while ite_without_imp < 8:
+        while (ite_without_imp < 8 and line < 59):
             start = time.time()
             for i in range(len(training_data_list)):
                 data = training_data_list[i]
@@ -310,9 +313,12 @@ class neuralNetwork:
             end = time.time()
             print("Durchläufe ohne Verbesserung:",ite_without_imp)
             print("Durchläufe:", iterations)
-            print("Zeit in Minuten:", (end-start)/60)
+            print("Zeit in Sekunden:", (end-start))
             print("bestperformance:", bestperformance)
-
+            sheet1.write(line, 0, (end-start))
+            sheet1.write(line, 1, performance)
+            line += 1
+            
         
 
 
@@ -337,5 +343,11 @@ def readdata(imgf, labelf, n):
 
 #Neuronales Netzwerk erstellen.
 if __name__ == "__main__":
+    wb = xlwt.Workbook()
+    sheet1 = wb.add_sheet('Sheet 1')
+    sheet1.write(0, 0, 'Zeit')
+    sheet1.write(0, 1, 'Genauigkeit')
+    
     n = neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias)
     n.trainnetwork()
+    wb.save('tempergebnisse.xls')
