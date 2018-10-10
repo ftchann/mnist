@@ -15,13 +15,13 @@ numberof_input_neurons = 784
 numberof_hidden_neurons = 100
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 1
+numberof_hidden_layers = 5
 #learningrate definieren
 learningrate = 0.01
-#Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu))
-activation_function = 'lrelu'
+#Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu)) #In die Outlayer kommt immer Sigmoid, tanh könnte auch verwendet werden. ReLu und LReLu hingegen nicht.
+activation_function = 'relu'
 #Verzerrung (Bias ein- und ausschalten)
-bias = False
+bias = True
 
 #Neuronales Netzwerk definieren
 class neuralNetwork:
@@ -135,12 +135,12 @@ class neuralNetwork:
             #Wenn es einen Verzerrung hat wird er addiert.
             if self.bias == True:
                 hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs)+self.weights_hidden_1_input_bias)
-                output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_outputs)+self.weights_hidden_output_bias)
+                output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_outputs)+self.weights_hidden_output_bias)
             else:
                 #Eingabe mal Gewicht und dann das ganze in die Aktivierungsfunktion
                 hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
                 #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix und dann das ganze in die Aktivierungsfunktion
-                output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_outputs))
+                output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_outputs))
             return output_outputs, hidden_outputs
                
         elif self.hidden_layers == 5:
@@ -157,7 +157,7 @@ class neuralNetwork:
                 #hiddens Layer 5
                 hidden_5_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_5_4, hidden_4_outputs)+self.weights_hidden_5_4_bias)
                 #output Layer
-                output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs)+self.weights_hidden_output_bias)
+                output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_5_outputs)+self.weights_hidden_output_bias)
             else:
 			#Analog zu hidden_layers==1
                 #hiddens Layer 1
@@ -171,7 +171,7 @@ class neuralNetwork:
                 #hiddens Layer 5
                 hidden_5_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_5_4, hidden_4_outputs))
                 #output Layer
-                output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, hidden_5_outputs))
+                output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_5_outputs))
             return output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs
         else:
             #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
@@ -193,7 +193,7 @@ class neuralNetwork:
         if self.hidden_layers == 1:
             output_outputs, hidden_outputs = self.forwardprop(inputs_list)
             #ausgabefehler (Ziel-Ausgabe)
-            output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
+            output_error = (targets - output_outputs) * self.activationfunction_derivative['sigmoid'](output_outputs)
             #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
             hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_outputs)
             #Gewichte aktuallisieren Versteckt-Ausgabe
@@ -208,7 +208,7 @@ class neuralNetwork:
             
             output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs = self.forwardprop(inputs_list)
             #analog zu Hiddenlayers = 1 berechnung des Fehlers
-            output_error = (targets - output_outputs) * self.activationfunction_derivative[self.function](output_outputs)
+            output_error = (targets - output_outputs) * self.activationfunction_derivative['sigmoid'](output_outputs)
             hidden_5_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_5_outputs)
             hidden_4_error = np.dot(self.weight_hidden_5_4.T, hidden_5_error) * self.activationfunction_derivative[self.function](hidden_4_outputs)
             hidden_3_error = np.dot(self.weight_hidden_4_3.T, hidden_4_error) * self.activationfunction_derivative[self.function](hidden_3_outputs)
@@ -273,14 +273,14 @@ class neuralNetwork:
 #trainingsdaten einlesen und trennen 
     def trainnetwork(self):
         bestperformance = 0
-        ite_without_imp = 0
-        iterations = 0
+        epoch_without_imp = 0
+        epoch = 0
         line = 1
          #datei öffnen trainingsdaten
         training_data_list = readdata("Trainingsdaten/train-images.idx3-ubyte", "Trainingsdaten/train-labels.idx1-ubyte", 60000)
         #datei öffnen testdaten
         test_data_list = readdata("Trainingsdaten/t10k-images.idx3-ubyte", "Trainingsdaten/t10k-labels.idx1-ubyte", 10000)
-        while (ite_without_imp < 8 and line < 59):
+        while (epoch_without_imp < 8 and line < 100):
             start = time.time()
             for i in range(len(training_data_list)):
                 data = training_data_list[i]
@@ -308,17 +308,17 @@ class neuralNetwork:
                 #bestperformance neu setzen
                 bestperformance = performance
             else:
-                ite_without_imp = ite_without_imp + 1
-            iterations += 1
+                epoch_without_imp = epoch_without_imp + 1
+            epoch += 1
             end = time.time()
             print("Durchläufe ohne Verbesserung:",ite_without_imp)
-            print("Durchläufe:", iterations)
+            print("Durchläufe:", epoch)
             print("Zeit in Sekunden:", (end-start))
             print("bestperformance:", bestperformance)
             sheet1.write(line, 0, (end-start))
             sheet1.write(line, 1, performance)
             line += 1
-            
+            wb.save('tempergebnisse.xls')
         
 
 
@@ -347,7 +347,5 @@ if __name__ == "__main__":
     sheet1 = wb.add_sheet('Sheet 1')
     sheet1.write(0, 0, 'Zeit')
     sheet1.write(0, 1, 'Genauigkeit')
-    
     n = neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias)
     n.trainnetwork()
-    wb.save('tempergebnisse.xls')
