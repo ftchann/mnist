@@ -17,9 +17,9 @@ def readpicture(path):
     img_array = skimage.io.imread(path,as_grey=True)
     #Auf 255 erweitern 
     image= img_array*255
-    #Treshholding
+    #Treshholding je nach Helligkeit des Bildes die Werte ändern. Helle Bilder Funktionieren besser. Es kann auch eine andere Methode benutzt werden.
     blocksize=911
-    local_thresh = threshold_local(image, blocksize, method='gaussian', offset=70)
+    local_thresh = threshold_local(image, blocksize, method='mean', offset=30)
     binary_local = image > local_thresh
     #werte umkehren
     img_array2 = abs(1-np.int32(binary_local))

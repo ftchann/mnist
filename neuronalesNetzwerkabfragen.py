@@ -24,7 +24,7 @@ bias = True
 
 na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 #Gewichte laden 
-weight = np.load("bestgewicht/bestweight_1hiddenlayer_sigmoid_250neurons.npy")
+weight = np.load("bestgewicht/bestweight_1hiddenlayer_sigmoid_250neurons..npy")
 if bias == True:
     biases = np.load("bestgewicht/bestbias_1hiddenlayer_sigmoid_250neurons.npy")
 if numberof_hidden_layers == 0:
