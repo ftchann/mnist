@@ -16,9 +16,10 @@ numberof_hidden_layers = 1
 learningrate = 0.1
 #Aktivationfunktion
 activation_function = 'sigmoid'
-#Neuronales Netzwerk erstellen
 #Schwellwert
 bias=True
+#Neuronales Netzwerk erstellen
+
 na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 #Gewichte laden 
 weight = np.load("bestweight.npy")

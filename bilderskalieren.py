@@ -61,7 +61,6 @@ def MaxDistance(Sxa, Sya, image):
                     maxdxy = dy
             else:
                 pass
-            
     return maxdxy
             
 
@@ -102,12 +101,5 @@ def start(path):
     img_0final = np.reshape(img_final,(28,28))
     plot.imshow(img_0final, cmap='gray')
     return img_final
-start(path)
-
-#format_0img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
-#format_1img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
-#print(CenterofMass(format_0img))
-#print(CenterofMass(format_1img))
-#plot.imshow(format_0img, cmap='gray')
 
 

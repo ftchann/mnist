@@ -12,7 +12,7 @@ import xlwt
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
 numberof_input_neurons = 784
-numberof_hidden_neurons = 250
+numberof_hidden_neurons = 200
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
@@ -331,18 +331,19 @@ class neuralNetwork:
 
 
 #Datei lesen
-def readdata(imgf, labelf, n):
-    #In binary Modus lesen von https://pjreddie.com/projects/mnist-in-csv/
-    images = open(imgf, "rb")
-    label = open(labelf, "rb")
+def readdata(imgplace, labelplace, n):
+    #In binary Modus lesen von https://pjreddie.com/projects/mnist-in-csv/ besucht:11.10.2018
+    images = open(imgplace, "rb")
+    label = open(labelplace, "rb")
     #Erste 16 bezieungsweise 8 bytes überspringen, da keine Daten drin sind. read() funktion springt immer auf das Nächste.
     images.read(16)
     label.read(8)
     imagedata = []
     #Ganze Datei durchgehen, n = anzahl bilder
     for i in range(n):
-        #lesen und zwischenspeichern
+        #Label lesen und zwischenspeichern
         image = [ord(label.read(1))]
+        #784 Pixels lesen
         for j in range(28*28):
             image.append(ord(images.read(1)))
         #bild in Bilddata einfügen
