@@ -8,7 +8,7 @@ import numpy as np
 import neuronalesNetzwerk as nk
 import bilderskalieren as bs
 #Dateipfad
-path = 'Testfotos/7_1.jpg'
+path = 'Testfotos/5_2.jpg'
 numberof_input_neurons = 784
 numberof_hidden_neurons = 200
 numberof_output_neurons = 10
@@ -24,7 +24,7 @@ bias = True
 
 na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 #Gewichte laden 
-weight = np.load("bestgewicht/bestweight_1hiddenlayer_sigmoid_250neurons..npy")
+weight = np.load("bestgewicht/bestweight_1hiddenlayer_sigmoid_250neurons.npy")
 if bias == True:
     biases = np.load("bestgewicht/bestbias_1hiddenlayer_sigmoid_250neurons.npy")
 if numberof_hidden_layers == 0:

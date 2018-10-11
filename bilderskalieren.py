@@ -18,8 +18,8 @@ def readpicture(path):
     #Auf 255 erweitern 
     image= img_array*255
     #Treshholding
-    blocksize=9555
-    local_thresh = threshold_local(image, blocksize, method='mean', offset=50)
+    blocksize=911
+    local_thresh = threshold_local(image, blocksize, method='gaussian', offset=70)
     binary_local = image > local_thresh
     #werte umkehren
     img_array2 = abs(1-np.int32(binary_local))
@@ -82,7 +82,6 @@ def transformMatrix(format_img):
     shape_format_img = np.shape(format_img)
 	#Auf 20*20 skalieren
     format_img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
-    print(np.shape(format_img))
     #format_img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
     #4Pixel breiter Rand hinzufügen
     img_0final = np.pad(format_img, 4,'constant', constant_values=(0))
