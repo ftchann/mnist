@@ -8,7 +8,7 @@ import numpy as np
 import neuronalesNetzwerk as nk
 import bilderskalieren as bs
 #Dateipfad
-path = 'Testfotos/5_2.jpg'
+path = 'Testfotos/0_1.jpg'
 numberof_input_neurons = 784
 numberof_hidden_neurons = 200
 numberof_output_neurons = 10

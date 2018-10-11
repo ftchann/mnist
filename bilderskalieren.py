@@ -10,7 +10,7 @@ import matplotlib.pyplot as plot
 import skimage.transform
 from skimage.filters import threshold_local
 
-path= 'Testfotos/5_2.jpg'
+path= 'Testfotos/6_1.jpg'
 
 def readpicture(path):
     #Daten in Grauwerten einlesen
@@ -19,7 +19,7 @@ def readpicture(path):
     image= img_array*255
     #Treshholding je nach Helligkeit des Bildes die Werte ändern. Helle Bilder Funktionieren besser. Es kann auch eine andere Methode benutzt werden.
     blocksize=911
-    local_thresh = threshold_local(image, blocksize, method='mean', offset=30)
+    local_thresh = threshold_local(image, blocksize, method='mean', offset=40)
     binary_local = image > local_thresh
     #werte umkehren
     img_array2 = abs(1-np.int32(binary_local))
@@ -69,12 +69,16 @@ def Cut(img_array2):
     Sx, Sy = CenterofMass(img_array2)
     MaxDistance2 = MaxDistance(Sx, Sy, img_array2)
     #Schneiden
-    OberY = int(Sy - MaxDistance2+0.5)
-    UnterY = int(Sy + MaxDistance2+0.5)
-    LinksX = int(Sx - MaxDistance2+0.5)
-    RechtsX = int(Sx + MaxDistance2+0.5)
+    OberY = int(Sy + MaxDistance2)
+    UnterY = int(Sy - MaxDistance2)
+    LinksX = int(Sx - MaxDistance2)
+    RechtsX = int(Sx + MaxDistance2)
+    if OberY - UnterY > RechtsX - LinksX:
+        OberY -= int((OberY-UnterY)-(RechtsX-LinksX))
+    if RechtsX - LinksX > OberY - UnterY:
+        RechtsX -= int((RechtsX-LinksX)-(OberY-UnterY))
     #Neue Matrix mit diesen Rändern.
-    format_img = img_array2[LinksX:RechtsX,OberY:UnterY]
+    format_img = img_array2[LinksX:RechtsX,UnterY:OberY]
     plot.imshow(format_img, cmap='gray')
     return format_img
 
