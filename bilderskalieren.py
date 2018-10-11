@@ -10,7 +10,7 @@ import matplotlib.pyplot as plot
 import skimage.transform
 from skimage.filters import threshold_local
 
-path= 'Testfotos/2_1.jpg'
+path= 'Testfotos/5_2.jpg'
 
 def readpicture(path):
     #Daten in Grauwerten einlesen
@@ -69,18 +69,20 @@ def Cut(img_array2):
     Sx, Sy = CenterofMass(img_array2)
     MaxDistance2 = MaxDistance(Sx, Sy, img_array2)
     #Schneiden
-    OberY = int(Sy - MaxDistance2)
-    UnterY = int(Sy + MaxDistance2)
-    LinksX = int(Sx - MaxDistance2)
-    RechtsX = int(Sx + MaxDistance2)
+    OberY = int(Sy - MaxDistance2+0.5)
+    UnterY = int(Sy + MaxDistance2+0.5)
+    LinksX = int(Sx - MaxDistance2+0.5)
+    RechtsX = int(Sx + MaxDistance2+0.5)
     #Neue Matrix mit diesen Rändern.
     format_img = img_array2[LinksX:RechtsX,OberY:UnterY]
+    plot.imshow(format_img, cmap='gray')
     return format_img
 
 def transformMatrix(format_img):
     shape_format_img = np.shape(format_img)
 	#Auf 20*20 skalieren
     format_img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
+    print(np.shape(format_img))
     #format_img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
     #4Pixel breiter Rand hinzufügen
     img_0final = np.pad(format_img, 4,'constant', constant_values=(0))
@@ -90,14 +92,14 @@ def transformMatrix(format_img):
     img_0final = (img_0final / img_0final[np.argmax(img_0final)]) * 255
     return(img_0final)
 
-
-
-img_array = readpicture(path)
-format_img = Cut(img_array)
-img_final = transformMatrix(format_img)
-img_0final = np.reshape(img_final,(28,28))
-print(CenterofMass(img_0final))
-
+def start(path):
+    img_array = readpicture(path)
+    format_img = Cut(img_array)
+    img_final = transformMatrix(format_img)
+    img_0final = np.reshape(img_final,(28,28))
+    plot.imshow(img_0final, cmap='gray')
+    return img_final
+start(path)
 
 #format_0img = skimage.transform.pyramid_reduce(format_img*255, downscale=(shape_format_img[0]/20))
 #format_1img = skimage.transform.rescale(format_img*255, 20/shape_format_img[0])
@@ -106,5 +108,3 @@ print(CenterofMass(img_0final))
 #plot.imshow(format_0img, cmap='gray')
 
 
-
-plot.imshow(img_0final, cmap='gray')

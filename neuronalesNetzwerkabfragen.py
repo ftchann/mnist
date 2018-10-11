@@ -7,6 +7,8 @@ Created on Wed Jun 13 01:37:18 2018
 import numpy as np
 import neuronalesNetzwerk as nk
 import bilderskalieren as bs
+#Dateipfad
+path = 'Testfotos/7_1.jpg'
 numberof_input_neurons = 784
 numberof_hidden_neurons = 200
 numberof_output_neurons = 10
@@ -19,14 +21,23 @@ activation_function = 'sigmoid'
 #Verzerrung (Bias ein- und ausschalten)
 bias = True
 #Neuronales Netzwerk erstellen
+
 na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 #Gewichte laden 
-weight = np.load("bestweight_1hiddenlayer.npy")
+weight = np.load("bestgewicht/bestweight_1hiddenlayer_sigmoid_250neurons..npy")
+if bias == True:
+    biases = np.load("bestgewicht/bestbias_1hiddenlayer_sigmoid_250neurons.npy")
 if numberof_hidden_layers == 0:
-    na.weight_hidden_1_input = weight[0]
+    na.weight_hidden_1_input = weight
+    if bias==True:
+        na.weights_hidden_output_bias = biases
 if numberof_hidden_layers == 1:
     na.weight_hidden_1_input = weight[0]
     na.weight_hidden_output = weight[1]
+    if bias==True:
+        na.weights_hidden_1_input_bias = biases[0]
+        na.weights_hidden_output_bias = biases[1]
+
 if numberof_hidden_layers == 5:
     na.weight_hidden_1_input = weight[0]
     na.weight_hidden_2_1 = weight[1]
@@ -34,11 +45,20 @@ if numberof_hidden_layers == 5:
     na.weight_hidden_4_3 = weight[3]
     na.weight_hidden_5_4 = weight[4]
     na.weight_hidden_output = weight[5]
+    if bias==True:
+        na.weights_hidden_1_input_bias = bias[0]
+        na.weights_hidden_2_1_bias = biases[1]
+        na.weights_hidden_3_2_bias = biases[2]
+        na.weights_hidden_4_3_bias = biases[3]
+        na.weights_hidden_5_4_bias = biases[4]
+        na.weights_hidden_output_bias = biases[5]
 #Bild laden
-input_list = bs.img_final
+output_list = bs.start(path)
 #Ausgabe Matrix
-outputs = na.asknetwork(input_list)
-print(outputs)
+if na.hidden_layers == 0:
+    outputs = na.forwardprop(output_list)
+else:
+    outputs = na.forwardprop(output_list)[0]
 Number = np.argmax(outputs)
 #Zahl ausgeben
 print(Number)
