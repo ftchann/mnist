@@ -17,7 +17,9 @@ numberof_hidden_layers = 1
 activation_function = 'sigmoid'
 #learningrate definieren
 learningrate = 0.1
+#Schwellwert
+bias=True
 
-n = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function)
+n = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 
 n.trainnetwork()

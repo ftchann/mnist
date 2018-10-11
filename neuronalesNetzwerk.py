@@ -12,14 +12,14 @@ import xlwt
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
 numberof_input_neurons = 784
-numberof_hidden_neurons = 100
+numberof_hidden_neurons = 250
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 5
+numberof_hidden_layers = 1
 #learningrate definieren
-learningrate = 0.01
+learningrate = 0.1
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu)) #In die Outlayer kommt immer Sigmoid, tanh könnte auch verwendet werden. ReLu und LReLu hingegen nicht.
-activation_function = 'relu'
+activation_function = 'sigmoid'
 #Verzerrung (Bias ein- und ausschalten)
 bias = True
 
@@ -51,7 +51,6 @@ class neuralNetwork:
     #Ableitung leaky ReLu
     def lrelu_derivative(self, x):
         return 1 * (x > 0) + (x <= 0) * 0.01
-    
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias):
         np.random.seed(1)#Seed  für random funktion festlegen (damit gibt die np.random bei jedem Durchgang die gleichen Zahlen aus)
@@ -297,13 +296,22 @@ class neuralNetwork:
                 if self.hidden_layers == 0:
                     best_weight = self.weight_hidden_output
                     np.save("bestweight_0hiddenlayer.npy", best_weight)
+                    if self.bias==True:
+                        best_bias = self.weights_hidden_output_bias
+                        np.save("bestbias_0hiddenlayer.npy",best_bias)
                 if self.hidden_layers == 1:
                     best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_output])
                     np.save("bestweight_1hiddenlayer.npy", best_weight)
+                    if self.bias==True:
+                        best_bias = np.array([self.weights_hidden_1_input_bias, self.weights_hidden_output_bias])
+                        np.save("bestbias_1hiddenlayer.npy",best_bias)
                 if self.hidden_layers == 5:
                     best_weight = np.array([self.weight_hidden_1_input, self.weight_hidden_2_1, self.weight_hidden_3_2, self.weight_hidden_4_3, self.weight_hidden_5_4, self.weight_hidden_output])
                     np.save("bestweight_5hiddenlayer.npy", best_weight)
-                ite_without_imp = 0
+                    if self.bias==True:
+                        best_bias = np.array([self.weights_hidden_1_input_bias, self.weights_hidden_2_1_bias,self.weights_hidden_3_2_bias, self.weights_hidden_4_3_bias,self.weights_hidden_5_4_bias, self.weights_hidden_output_bias])
+                        np.save("bestbias_5hiddenlayer.npy",best_bias)
+                epoch_without_imp = 0
                 #beste Gewichte     
                 #bestperformance neu setzen
                 bestperformance = performance
@@ -311,7 +319,7 @@ class neuralNetwork:
                 epoch_without_imp = epoch_without_imp + 1
             epoch += 1
             end = time.time()
-            print("Durchläufe ohne Verbesserung:",ite_without_imp)
+            print("Durchläufe ohne Verbesserung:",epoch_without_imp)
             print("Durchläufe:", epoch)
             print("Zeit in Sekunden:", (end-start))
             print("bestperformance:", bestperformance)
