@@ -19,6 +19,4 @@ Make sure that you don't loose the pretrained weights. Put them into another fol
   Make sure that the parameters from your neuralnetwork are the same as the parameters form your best weights or biases.<br>
   Lead your .npy file and ask the neural network.<br>
   The programm will print you what digit you wrote.<br>
-  You can change the parameters for the Treshhold function in bilderskalieren.py to get a better results.<br>
-  You can change blocksize, method and offset
 </p>
