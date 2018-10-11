@@ -16,7 +16,7 @@ Make sure that you don't loose the pretrained weights. Put them into another fol
   Make sure that the line width is not to small.<br>
   The get the best performance, your digit should be in the same format as the digits in the Mnist dataset.<br>
   Then change to path to your picture. <br>
-  Make sure that the parameters from your neuralnetwork is the same as the parameters form your best weights or biases<br>
-  Lead your .npy file and ask the neural network<br>
-  The programm will print you what digit you wrote<br>
+  Make sure that the parameters from your neuralnetwork are the same as the parameters form your best weights or biases.<br>
+  Lead your .npy file and ask the neural network.<br>
+  The programm will print you what digit you wrote.<br>
 </p>
