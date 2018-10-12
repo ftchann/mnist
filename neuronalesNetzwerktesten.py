@@ -8,12 +8,12 @@ import numpy as np
 import neuronalesNetzwerk as nk
 
 numberof_input_neurons = 784
-numberof_hidden_neurons = 20
+numberof_hidden_neurons = 250
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
 numberof_hidden_layers = 1
 #learningrate definieren
-learningrate = 0.1
+learningrate = 0.01
 #Aktivationfunktion
 activation_function = 'sigmoid'
 #Schwellwert
@@ -22,16 +22,37 @@ bias=True
 
 na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 #Gewichte laden 
-weight = np.load("bestweight.npy")
-na.weight_hidden_1_input = weight[0]
-na.weight_hidden_2_1 = weight[1]
-na.weight_hidden_3_2 = weight[2]
-na.weight_hidden_4_3 = weight[3]
-na.weight_hidden_5_4 = weight[4]
-na.weight_hidden_output = weight[5]
+weight = np.load("gewichte/bestweight_1hiddenlayer_sigmoid_250neurons..npy")
+if bias == True:
+    biases = np.load("gewichte/bestbias_1hiddenlayer_sigmoid_250neurons.npy")
+if numberof_hidden_layers == 0:
+    na.weight_hidden_1_input = weight
+    if bias==True:
+        na.weights_hidden_output_bias = biases
+if numberof_hidden_layers == 1:
+    na.weight_hidden_1_input = weight[0]
+    na.weight_hidden_output = weight[1]
+    if bias==True:
+        na.weights_hidden_1_input_bias = biases[0]
+        na.weights_hidden_output_bias = biases[1]
+
+if numberof_hidden_layers == 5:
+    na.weight_hidden_1_input = weight[0]
+    na.weight_hidden_2_1 = weight[1]
+    na.weight_hidden_3_2 = weight[2]
+    na.weight_hidden_4_3 = weight[3]
+    na.weight_hidden_5_4 = weight[4]
+    na.weight_hidden_output = weight[5]
+    if bias==True:
+        na.weights_hidden_1_input_bias = biases[0]
+        na.weights_hidden_2_1_bias = biases[1]
+        na.weights_hidden_3_2_bias = biases[2]
+        na.weights_hidden_4_3_bias = biases[3]
+        na.weights_hidden_5_4_bias = biases[4]
+        na.weights_hidden_output_bias = biases[5]
 
 #Testdatei laden
-test_data_list = nk.readdata("t10k-images.idx3-ubyte", "t10k-labels.idx1-ubyte", 10000)
+test_data_list = nk.readdata("Trainingsdaten/t10k-images.idx3-ubyte", "Trainingsdaten/t10k-labels.idx1-ubyte", 10000)
 #Performance ausgeben
 performance = na.testnetwork(test_data_list)
 print(performance)

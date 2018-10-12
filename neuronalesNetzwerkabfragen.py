@@ -46,7 +46,7 @@ if numberof_hidden_layers == 5:
     na.weight_hidden_5_4 = weight[4]
     na.weight_hidden_output = weight[5]
     if bias==True:
-        na.weights_hidden_1_input_bias = bias[0]
+        na.weights_hidden_1_input_bias = biases[0]
         na.weights_hidden_2_1_bias = biases[1]
         na.weights_hidden_3_2_bias = biases[2]
         na.weights_hidden_4_3_bias = biases[3]
