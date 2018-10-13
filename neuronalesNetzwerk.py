@@ -290,7 +290,8 @@ class neuralNetwork:
                 #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht immer vorne
                 targets[int(data[0])] = 1
                 self.backprop(inputs, targets)
-            performance = self.testnetwork(test_data_list)  
+            performance = self.testnetwork(test_data_list)
+            #performance_train = self.testnetwork(training_data_list)       #Wird nur benötigt, um Overfitting zu zeigen
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
                 if self.hidden_layers == 0:
@@ -325,6 +326,7 @@ class neuralNetwork:
             print("bestperformance:", bestperformance)
             sheet1.write(line, 0, (end-start))
             sheet1.write(line, 1, performance)
+            #sheet1.write(line, 2, performance_train)
             line += 1
             wb.save('tempergebnisse.xls')
         
