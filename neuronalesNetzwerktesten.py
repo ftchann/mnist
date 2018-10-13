@@ -8,12 +8,12 @@ import numpy as np
 import neuronalesNetzwerk as nk
 
 numberof_input_neurons = 784
-numberof_hidden_neurons = 250
+numberof_hidden_neurons = 100
 numberof_output_neurons = 10
 #Anzahl versteckte Layers definieren
-numberof_hidden_layers = 1
+numberof_hidden_layers = 0
 #learningrate definieren
-learningrate = 0.01
+learningrate = 0.1
 #Aktivationfunktion
 activation_function = 'sigmoid'
 #Schwellwert
@@ -22,11 +22,11 @@ bias=True
 
 na = nk.neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers,activation_function,bias)
 #Gewichte laden 
-weight = np.load("gewichte/bestweight_1hiddenlayer_sigmoid_250neurons..npy")
+weight = np.load("gewichte/weight_0hiddenlayer_sigmoid.npy")
 if bias == True:
-    biases = np.load("gewichte/bestbias_1hiddenlayer_sigmoid_250neurons.npy")
+    biases = np.load("gewichte/bias_0hiddenlayer_sigmoid.npy")
 if numberof_hidden_layers == 0:
-    na.weight_hidden_1_input = weight
+    na.weight_hidden_output = weight
     if bias==True:
         na.weights_hidden_output_bias = biases
 if numberof_hidden_layers == 1:
