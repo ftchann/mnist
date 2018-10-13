@@ -19,7 +19,7 @@ numberof_hidden_layers = 1
 #learningrate definieren
 learningrate = 0.1
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu)) #In die Outlayer kommt immer Sigmoid, tanh könnte auch verwendet werden. ReLu und LReLu hingegen nicht.
-activation_function = 'sigmoid'
+activation_function = 'relu'
 #Verzerrung (Bias ein- und ausschalten)
 bias = True
 
@@ -140,6 +140,7 @@ class neuralNetwork:
                 hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
                 #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix und dann das ganze in die Aktivierungsfunktion
                 output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_outputs))
+                self.alive_neurons += hidden_outputs
             return output_outputs, hidden_outputs
                
         elif self.hidden_layers == 5:
@@ -289,6 +290,7 @@ class neuralNetwork:
                 targets = np.zeros(numberof_output_neurons) 
                 #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht immer vorne
                 targets[int(data[0])] = 1
+                self.alive_neurons = 0
                 self.backprop(inputs, targets)
             performance = self.testnetwork(test_data_list)
             #performance_train = self.testnetwork(training_data_list)       #Wird nur benötigt, um Overfitting zu zeigen
@@ -324,9 +326,12 @@ class neuralNetwork:
             print("Durchläufe:", epoch)
             print("Zeit in Sekunden:", (end-start))
             print("bestperformance:", bestperformance)
+            dead_neurons = np.where(self.alive_neurons == 0)[0]
+            print("Anzahl toter Neuronen:", np.shape(dead_neurons)[0])
             sheet1.write(line, 0, (end-start))
             sheet1.write(line, 1, performance)
             #sheet1.write(line, 2, performance_train)
+            sheet1.write(line, 3, np.shape(dead_neurons)[0])
             line += 1
             wb.save('tempergebnisse.xls')
         
