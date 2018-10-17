@@ -41,7 +41,6 @@ def CenterofMass(image):
     y = (np.sum(image * indices[1])) / np.sum(image)
     return x,y
 
-
 def MaxDistance(Sxa, Sya, image):
     maxdxy = 0
     Sx = Sxa

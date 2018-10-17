@@ -18,7 +18,7 @@ numberof_hidden_layers = 0
 learningrate = 0.1
 #Aktivationfunktion
 activation_function = 'sigmoid'
-#Verzerrung (Bias ein- und ausschalten)
+#Schwellenwert (Bias ein- und ausschalten)
 bias = True
 #Neuronales Netzwerk erstellen
 

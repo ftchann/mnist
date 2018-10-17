@@ -6,8 +6,6 @@ Created on Sun Jun 10 18:16:22 2018
 import numpy as np
 import time
 import sys
-import xlwt
-
 
 #Anzahl von Eingabe, Versteckten und Ausgabeneuronen definieren
 #Für Mnist muss input_neurons = 784 und output_neurons = 10 sein.
@@ -20,7 +18,7 @@ numberof_hidden_layers = 1
 learningrate = 0.1
 #Aktivierungsfunktion definieren (zur Auswahl stehen sigmoid, tanh, relu und lrelu (leaky ReLu)) #In die Outlayer kommt immer Sigmoid, tanh könnte auch verwendet werden. ReLu und LReLu hingegen nicht.
 activation_function = 'relu'
-#Verzerrung (Bias ein- und ausschalten)
+#Schwellenwert (Bias ein- und ausschalten)
 bias = True
 
 #Neuronales Netzwerk definieren
@@ -66,7 +64,7 @@ class neuralNetwork:
         self.hidden_neurons_2 = self.hidden_neurons_5*(self.hidden_layers-1) # Anzahl hiddenneuronen Layer 2
         self.hidden_neurons_3 = self.hidden_neurons_5*(self.hidden_layers-2) # Anzahl hiddenneuronen Layer 3
         self.hidden_neurons_4 = self.hidden_neurons_5*(self.hidden_layers-3) # Anzahl hiddenneuronen Layer 4
-		#Alles 0 setzen. Behebt das Problem beim speichern, wenn nicht alle hidden layers genutzt werden.
+        #Alles 0 setzen. Behebt das Problem beim speichern, wenn nicht alle hidden layers genutzt werden.
         self.weight_hidden_output = 0
         self.weight_hidden_5_4 = 0
         self.weight_hidden_4_3 = 0
@@ -74,10 +72,10 @@ class neuralNetwork:
         self.weight_hidden_2_1 = 0
         self.weight_hidden_1_input = 0
         #Gewichtungsmatrixen und Bias definieren
-        #Grösse der Verzerrung gleich der Anzahl Neuronen in der Schicht.
+        #Grösse der Schwellenwert gleich der Anzahl Neuronen in der Schicht.
         #Grösse der Gewichtungsmatrix ist hintere Layer mal vordere Layer.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Diese sind 0 +- hiddnennodes hoch -0.5 
-        #Verzerrungsmatrix hat ebenfalls am Anfang Zufalls zahlen. Diese sind 0 +- hiddnennodes hoch -0.5 
+        #Schwellenwertsmatrix hat ebenfalls am Anfang Zufalls zahlen. Diese sind 0 +- hiddnennodes hoch -0.5 
         #Gewichte Versteckte-Outputlayer
         if self.hidden_layers == 0:
             self.weight_hidden_output = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, self.input_neurons))
@@ -88,7 +86,7 @@ class neuralNetwork:
             if self.bias ==True:
                 self.weights_hidden_output_bias = np.random.normal(0.0,pow(self.output_neurons, -0.5),(self.output_neurons, 1))
         #Gewichte Hiddenlayer 1 - 5
-        #Verzerrung Hiddenlayer 1 - 5
+        #Schwellenwert Hiddenlayer 1 - 5
         #Im Moment haben alle Verstecktenlayers die selbe Anzahl Neuronen numberof_hidden_neurons * numberof_hidden_layers
         if self.hidden_layers >= 1:
             self.weight_hidden_1_input = np.random.normal(0.0,pow(self.hidden_neurons_1, -0.5),(self.hidden_neurons_1, self.input_neurons))
@@ -123,15 +121,15 @@ class neuralNetwork:
         if self.hidden_layers == 0:
             #Analog zu numberof_hidden_layers = 1 einfach ohne die versteckten Komponenten.
             #Dies ist nur ein Experiment welche genauigkeit sich mit keinen hiddenn Layers erzielen lässt.
-            #Wenn es einen Verzerrung hat wird er addiert.
+            #Wenn es einen Schwellenwert hat wird er addiert.
             if self.bias == True:
                  output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, inputs)+self.weights_hidden_output_bias)
             else:
                 output_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_output, inputs))
             return output_outputs
-            
+
         elif self.hidden_layers == 1:
-            #Wenn es einen Verzerrung hat wird er addiert.
+            #Wenn es einen Schwellenwert hat wird er addiert.
             if self.bias == True:
                 hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs)+self.weights_hidden_1_input_bias)
                 output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_outputs)+self.weights_hidden_output_bias)
@@ -140,11 +138,10 @@ class neuralNetwork:
                 hidden_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs))
                 #Die alten Ausgaben (neue Eingaben) mal Gewichtsmatrix und dann das ganze in die Aktivierungsfunktion
                 output_outputs = self.activationfunction['sigmoid'](np.dot(self.weight_hidden_output, hidden_outputs))
-                self.alive_neurons += hidden_outputs
             return output_outputs, hidden_outputs
                
         elif self.hidden_layers == 5:
-            #Wenn es einen Verzerrung hat wird er addiert.
+            #Wenn es einen Schwellenwert hat wird er addiert.
             if bias == True:
             #Analog zu hidden_layers==1
                 hidden_1_outputs = self.activationfunction[self.function](np.dot(self.weight_hidden_1_input, inputs)+self.weights_hidden_1_input_bias)
@@ -184,10 +181,10 @@ class neuralNetwork:
         inputs = np.array(inputs_list, ndmin=2).T
         if self.hidden_layers == 0:
             output_outputs = self.forwardprop(inputs_list)
-            #Die abweichung
+            #Die Abweichung
             output_error = targets - output_outputs
             self.weight_hidden_output += self.lr * np.dot(output_error * self.activationfunction_derivative[self.function](output_outputs), inputs.T)
-            #Backpropagation von der Verzerrung
+            #Backpropagation von den Schwellenwerten
             if bias == True:
                 self.weights_hidden_output_bias += self.lr * output_error * self.activationfunction_derivative[self.function](output_outputs)
         if self.hidden_layers == 1:
@@ -200,12 +197,11 @@ class neuralNetwork:
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
             #Gewichte aktuallisieren Eingabe-Versteckt                            
             self.weight_hidden_1_input += self.lr * np.dot(hidden_error, inputs.T)
-            #Backpropagation von der Verzerrung
+            #Backpropagation vom Schwellenwert
             if bias == True:
                 self.weights_hidden_output_bias += self.lr * output_error
                 self.weights_hidden_1_input_bias += self.lr * hidden_error                                       
         if self.hidden_layers == 5:
-            
             output_outputs, hidden_1_outputs, hidden_2_outputs, hidden_3_outputs, hidden_4_outputs, hidden_5_outputs = self.forwardprop(inputs_list)
             #analog zu Hiddenlayers = 1 berechnung des Fehlers
             output_error = (targets - output_outputs) * self.activationfunction_derivative['sigmoid'](output_outputs)
@@ -226,21 +222,20 @@ class neuralNetwork:
             self.weight_hidden_2_1 += self.lr * np.dot(hidden_2_error, hidden_1_outputs.T)
             #Gewichte aktualisieren Versteckt1-Eingabe
             self.weight_hidden_1_input += self.lr * np.dot(hidden_1_error, inputs.T)
-            #Backprogattion von der Verzerrung
+            #Backpropagation von der Schwellenwert
             if bias == True:
                 self.weights_hidden_output_bias += output_error
                 self.weights_hidden_5_4_bias +=hidden_5_error
                 self.weights_hidden_4_3_bias +=hidden_4_error
                 self.weights_hidden_3_2_bias +=hidden_3_error
                 self.weights_hidden_2_1_bias +=hidden_2_error
-                self.weights_hidden_1_input_bias += hidden_1_error
-   
+                self.weights_hidden_1_input_bias += hidden_1_error 
     
     def testnetwork(self, testdatalist):
-    #Performance Richtige, Versuche
+        #Performance Richtige, Versuche
         Right = 0
         Tries = 0
-    #data nehmen
+        #data nehmen
         test_data_list = testdatalist
         for i in range(len(test_data_list)):
             data = test_data_list[i]
@@ -261,26 +256,22 @@ class neuralNetwork:
                 Right += 1
                 Tries += 1
             else:
-                Tries += 1
-                
-     
-    #performance ausgeben
+                Tries += 1   
+        #performance ausgeben
         performance = Right/Tries
         print("Performance =", performance)
         return performance
-        
 
 #trainingsdaten einlesen und trennen 
     def trainnetwork(self):
         bestperformance = 0
         epoch_without_imp = 0
         epoch = 0
-        line = 1
          #datei öffnen trainingsdaten
         training_data_list = readdata("Trainingsdaten/train-images.idx3-ubyte", "Trainingsdaten/train-labels.idx1-ubyte", 60000)
         #datei öffnen testdaten
         test_data_list = readdata("Trainingsdaten/t10k-images.idx3-ubyte", "Trainingsdaten/t10k-labels.idx1-ubyte", 10000)
-        while (epoch_without_imp < 8 and line < 100):
+        while (epoch_without_imp < 8):
             start = time.time()
             for i in range(len(training_data_list)):
                 data = training_data_list[i]
@@ -290,10 +281,9 @@ class neuralNetwork:
                 targets = np.zeros(numberof_output_neurons) 
                 #Beim Ziel muss die richtige Zahl wert 1 haben. richtige Zahl steht immer vorne
                 targets[int(data[0])] = 1
-                self.alive_neurons = 0
                 self.backprop(inputs, targets)
             performance = self.testnetwork(test_data_list)
-            #performance_train = self.testnetwork(training_data_list)       #Wird nur benötigt, um Overfitting zu zeigen
+            #performance_train = self.testnetwork(training_data_list)#Wird nur benötigt, um Overfitting zu zeigen
             if performance > bestperformance:
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
                 if self.hidden_layers == 0:
@@ -325,17 +315,7 @@ class neuralNetwork:
             print("Durchläufe ohne Verbesserung:",epoch_without_imp)
             print("Durchläufe:", epoch)
             print("Zeit in Sekunden:", (end-start))
-            print("bestperformance:", bestperformance)
-            dead_neurons = np.where(self.alive_neurons == 0)[0]
-            print("Anzahl toter Neuronen:", np.shape(dead_neurons)[0])
-            sheet1.write(line, 0, (end-start))
-            sheet1.write(line, 1, performance)
-            #sheet1.write(line, 2, performance_train)
-            sheet1.write(line, 3, np.shape(dead_neurons)[0])
-            line += 1
-            wb.save('tempergebnisse.xls')
-        
-
+            print("bestperformance:", bestperformance)   
 
 #Datei lesen
 def readdata(imgplace, labelplace, n):
@@ -359,9 +339,5 @@ def readdata(imgplace, labelplace, n):
 
 #Neuronales Netzwerk erstellen.
 if __name__ == "__main__":
-    wb = xlwt.Workbook()
-    sheet1 = wb.add_sheet('Sheet 1')
-    sheet1.write(0, 0, 'Zeit')
-    sheet1.write(0, 1, 'Genauigkeit')
     n = neuralNetwork(numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias)
     n.trainnetwork()
