@@ -51,19 +51,19 @@ class neuralNetwork:
         return 1 * (x > 0) + (x <= 0) * 0.01
     #neuronales Netzwerk inistialisieren
     def __init__(self, numberof_input_neurons, numberof_hidden_neurons, numberof_output_neurons, learningrate, numberof_hidden_layers, activation_function,bias):
-        np.random.seed(1)#Seed  für random funktion festlegen (damit gibt die np.random bei jedem Durchgang die gleichen Zahlen aus)
+        np.random.seed(1) #Seed  für random funktion festlegen (damit gibt die np.random bei jedem Durchgang die gleichen Zahlen aus)
         #In den folgenden Layers werden die Parameter der Definition weitergegeben und die nötigen Variablen erstellt
-        self.bias=bias#Bias 
-        self.lr = learningrate # Lernrate
-        self.function = activation_function#Aktivierungsfunktion
+        self.bias=bias #Bias 
+        self.lr = learningrate #Lernrate
+        self.function = activation_function #Aktivierungsfunktion
         self.hidden_layers = numberof_hidden_layers #Anzahl verstecktelayers
-        self.input_neurons = numberof_input_neurons # Anzahl Eingabeneuronen
-        self.output_neurons= numberof_output_neurons # Anzahl ausgabeneuronen
-        self.hidden_neurons_5 = numberof_hidden_neurons # Anzahl hiddenneuronen Layer 5
-        self.hidden_neurons_1 = self.hidden_neurons_5 * self.hidden_layers # Anzahl hiddenneuronen Layer 1
-        self.hidden_neurons_2 = self.hidden_neurons_5*(self.hidden_layers-1) # Anzahl hiddenneuronen Layer 2
-        self.hidden_neurons_3 = self.hidden_neurons_5*(self.hidden_layers-2) # Anzahl hiddenneuronen Layer 3
-        self.hidden_neurons_4 = self.hidden_neurons_5*(self.hidden_layers-3) # Anzahl hiddenneuronen Layer 4
+        self.input_neurons = numberof_input_neurons #Anzahl Eingabeneuronen
+        self.output_neurons= numberof_output_neurons #Anzahl ausgabeneuronen
+        self.hidden_neurons_5 = numberof_hidden_neurons #Anzahl hiddenneuronen Layer 5
+        self.hidden_neurons_1 = self.hidden_neurons_5 * self.hidden_layers #Anzahl hiddenneuronen Layer 1
+        self.hidden_neurons_2 = self.hidden_neurons_5*(self.hidden_layers-1) #Anzahl hiddenneuronen Layer 2
+        self.hidden_neurons_3 = self.hidden_neurons_5*(self.hidden_layers-2) #Anzahl hiddenneuronen Layer 3
+        self.hidden_neurons_4 = self.hidden_neurons_5*(self.hidden_layers-3) #Anzahl hiddenneuronen Layer 4
         #Alles 0 setzen. Behebt das Problem beim speichern, wenn nicht alle hidden layers genutzt werden.
         self.weight_hidden_output = 0
         self.weight_hidden_5_4 = 0
@@ -72,7 +72,7 @@ class neuralNetwork:
         self.weight_hidden_2_1 = 0
         self.weight_hidden_1_input = 0
         #Gewichtungsmatrixen und Bias definieren
-        #Grösse der Schwellenwert gleich der Anzahl Neuronen in der Schicht.
+        #Grösse der Schwellenwertmatrix ist gleich der Anzahl Neuronen in der Schicht.
         #Grösse der Gewichtungsmatrix ist hintere Layer mal vordere Layer.
         #Für die Gewichtungsmatrixen gibt man am Anfang Zufallszahlen. Diese sind 0 +- hiddnennodes hoch -0.5 
         #Schwellenwertsmatrix hat ebenfalls am Anfang Zufalls zahlen. Diese sind 0 +- hiddnennodes hoch -0.5 
@@ -113,9 +113,10 @@ class neuralNetwork:
         #dictionary der Ableitung der Aktivierungsfunktions
         self.activationfunction_derivative={'sigmoid':self.sigmoid_derivative, 'relu':self.relu_derivative, 'tanh':self.tanh_derivative, 'lrelu':self.lrelu_derivative}
     
-    #macht die forward Propagation mit einer input Liste
+    #macht die forwardpropagation mit einer input Liste
     def forwardprop(self, inputs_list):
         #Inputsliste nehmen und transformieren damit sie hoch steht
+        #nmdin = 2 sorgt dafür, dass eine 2-Dimensionale Matrix erstellt wird
         inputs = np.array(inputs_list, ndmin=2).T
         
         if self.hidden_layers == 0:
@@ -174,7 +175,7 @@ class neuralNetwork:
             #Wenn eine nicht vorgesehene Anzahl hidden Layers gesetzt wird, beendet sich das Program  
             sys.exit("Error: Anzahl hidden Layers ungültig")
             
-        
+    #macht Backpropagation mit input und target liste  
     def backprop(self, inputs_list, targets_list):
         #analog zum importieren der input Liste 
         targets = np.array(targets_list, ndmin=2).T
@@ -188,14 +189,15 @@ class neuralNetwork:
             if bias == True:
                 self.weights_hidden_output_bias += self.lr * output_error * self.activationfunction_derivative[self.function](output_outputs)
         if self.hidden_layers == 1:
+            #Bild durch forwwardpropagation laufen
             output_outputs, hidden_outputs = self.forwardprop(inputs_list)
-            #ausgabefehler (Ziel-Ausgabe)
+            #Ausgabefehler (Ziel-Ausgabe)
             output_error = (targets - output_outputs) * self.activationfunction_derivative['sigmoid'](output_outputs)
-            #verstecktefehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
+            #versteckte Fehler (Ausgabe mal Gewicht) Gewichtsmatrix umkehren da wir jetzt zurückrechnen
             hidden_error = np.dot(self.weight_hidden_output.T, output_error) * self.activationfunction_derivative[self.function](hidden_outputs)
-            #Gewichte aktuallisieren Versteckt-Ausgabe
+            #Gewichte aktualisieren Versteckt-Ausgabe
             self.weight_hidden_output += self.lr * np.dot(output_error, hidden_outputs.T)
-            #Gewichte aktuallisieren Eingabe-Versteckt                            
+            #Gewichte aktualisieren Eingabe-Versteckt                            
             self.weight_hidden_1_input += self.lr * np.dot(hidden_error, inputs.T)
             #Backpropagation vom Schwellenwert
             if bias == True:
@@ -239,13 +241,13 @@ class neuralNetwork:
         test_data_list = testdatalist
         for i in range(len(test_data_list)):
             data = test_data_list[i]
-        #data in matrix umwandeln und normieren auf 1
+            #data in matrix umwandeln und normieren auf 1
             inputs = (np.asfarray(data[1:]) / 255.0)
+            #Zeil kreieren
             rightnumber = int(data[0])
-        #Zeil kreieren
             #Nimmt nur das erste Element aus dem return der Funktion forwardprop
             #Die Unterteilung zwischen 0 und 1+ Hidden Layers ist nötig,
-            #weil das Programm sonst nicht das 0te Element bei nur einem return zu nehmen
+            #weil das Programm sonst nicht das 0te Element bei nur einem return nehmen kann
             if self.hidden_layers == 0:
                 outputs = self.forwardprop(inputs)
             else:
@@ -267,7 +269,7 @@ class neuralNetwork:
         bestperformance = 0
         epoch_without_imp = 0
         epoch = 0
-         #datei öffnen trainingsdaten
+        #datei öffnen trainingsdaten
         training_data_list = readdata("Trainingsdaten/train-images.idx3-ubyte", "Trainingsdaten/train-labels.idx1-ubyte", 60000)
         #datei öffnen testdaten
         test_data_list = readdata("Trainingsdaten/t10k-images.idx3-ubyte", "Trainingsdaten/t10k-labels.idx1-ubyte", 10000)
@@ -283,8 +285,9 @@ class neuralNetwork:
                 targets[int(data[0])] = 1
                 self.backprop(inputs, targets)
             performance = self.testnetwork(test_data_list)
-            #performance_train = self.testnetwork(training_data_list)#Wird nur benötigt, um Overfitting zu zeigen
+            #performance_train = self.testnetwork(training_data_list) #Wird nur benötigt, um Overfitting zu zeigen
             if performance > bestperformance:
+                #speichern der besten Gewichte je nach Anzahl verstecken Schichten
                 #Format npy [gewichte1, gewichte2, gewichte3,...]
                 if self.hidden_layers == 0:
                     best_weight = self.weight_hidden_output
