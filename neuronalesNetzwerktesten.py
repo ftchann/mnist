@@ -3,6 +3,7 @@
 Created on Wed Jun 13 01:37:18 2018
 
 @author: Yann
+Fast identisches Programm zu neuronalesNetzwerktesten nur hier zum testen der Genauigkeit mit dem Testset
 """
 import numpy as np
 import neuronalesNetzwerk as nk

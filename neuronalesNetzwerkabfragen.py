@@ -3,6 +3,8 @@
 Created on Wed Jun 13 01:37:18 2018
 
 @author: Yann
+
+Fast identisches Programm zu neuronalesNetzwerktesten aber zum bestimmen von Bildern
 """
 import numpy as np
 import neuronalesNetzwerk as nk
