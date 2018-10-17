@@ -322,7 +322,7 @@ class neuralNetwork:
 
 #Datei lesen
 def readdata(imgplace, labelplace, n):
-    #In binary Modus lesen von https://pjreddie.com/projects/mnist-in-csv/ besucht:11.10.2018
+    #In binary Modus lesen von https://pjreddie.com/projects/mnist-in-csv/ besucht:11.10.2018 [18]
     images = open(imgplace, "rb")
     label = open(labelplace, "rb")
     #Erste 16 bezieungsweise 8 bytes überspringen, da keine Daten drin sind. read() funktion springt immer auf das Nächste.
