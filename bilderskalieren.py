@@ -17,26 +17,26 @@ def readpicture(path):
     img_array = skimage.io.imread(path,as_grey=True)
     #Auf 255 erweitern 
     image= img_array*255
-    #Treshholding je nach Helligkeit des Bildes die Werte ändern. Helle Bilder Funktionieren besser. Es kann auch eine andere Methode benutzt werden.
+    #Treshholding, die Werte werden je nach Helligkeit geändert. Helle Bilder Funktionieren besser. Es kann auch eine andere Methode Treshholding benutzt werden.
     blocksize=911
     local_thresh = threshold_local(image, blocksize, method='mean', offset=40)
     binary_local = image > local_thresh
     #werte umkehren
     img_array2 = abs(1-np.int32(binary_local))
-	#Die Hälfte der Breite oder Länge bestimmen 
+	#Die Hälfte der Breite oder Länge bestimmen je nach dem was grösser ist
     shape_img = np.shape(img_array2)
     if shape_img[0] > shape_img[1]:
         maxwh = shape_img[0]
     else:
         maxwh = shape_img[1]
-        #Bild um maxwh (Die Hälfte der Breite oder Länge) erweitern, damit man immer um Quadrat um das Objekt Cut kann.
+        #Bild um maxwh (Die Hälfte der Breite oder Länge) erweitern, damit man immer um Quadrat um das Objekt schneiden kann.
     img_array2 = np.pad(img_array2, int(maxwh/2),'constant', constant_values=0)
     return img_array2
 
 def CenterofMass(image):
-    #Diese Funktion dient zum  bestimmen des CenterofMasss des Bildes
+    #Matrix aus Indices kreieren  
     indices = np.indices((np.shape(image)))
-    #multipliziert die Werte in der Bildmatrix mit ihrem jewweiligen x-Achsenabschnitt und teilt die Summe davon mit der Summe aller Werte der Matrix
+    #Formel für Schwerpunktberechnung auf beiden Achsen anwenden  
     x = (np.sum(image * indices[0])) / np.sum(image)
     y = (np.sum(image * indices[1])) / np.sum(image)
     return x,y
@@ -71,6 +71,7 @@ def Cut(img_array2):
     UnterY = int(Sy - MaxDistance2)
     LinksX = int(Sx - MaxDistance2)
     RechtsX = int(Sx + MaxDistance2)
+    #Falls nicht quadratisch geschnitten wurde  
     if OberY - UnterY > RechtsX - LinksX:
         OberY -= int((OberY-UnterY)-(RechtsX-LinksX))
     if RechtsX - LinksX > OberY - UnterY:
