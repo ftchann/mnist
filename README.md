@@ -8,7 +8,7 @@ Make sure that you don't loose the pretrained weights. Put them into another fol
 <p>To test a neural network you need to run neuronaleNetzwerketesten.py.<br>
   Change the parameters so that your neural network has the same parameters as the parameters from your best weights or biases.<br>
   Load your .npy file and begin the test.<br>
-  It will give you what performance you got.</p>
+  It will give you the performance of the importet weights.</p>
 <h2>Ask Neural Network</h2>
 <p>To ask the neural network you need run neuronaleNetzwerkeabfragen.py<br>
   With this Programm you can check your own handwriting. Just make a picture from digit.<br>
