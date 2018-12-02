@@ -31,7 +31,7 @@ def readpicture(path):
         maxwh = shape_img[1]
         #Bild um maxwh (Die Hälfte der Breite oder Länge) erweitern, damit man immer um Quadrat um das Objekt schneiden kann.
     img_array2 = np.pad(img_array2, int(maxwh/2),'constant', constant_values=0)
-    return img_array2
+    return img_array, img_array2
 
 def CenterofMass(image):
     #Matrix aus Indices kreieren  
@@ -95,11 +95,21 @@ def transformMatrix(format_img):
     return(img_0final)
 
 def start(path):
-    img_array = readpicture(path)
+    fig, axes = plot.subplots(ncols=4, figsize=(8, 3))
+    ax = axes.ravel()
+    original, img_array = readpicture(path)
+    ax[0].imshow(original, cmap=plot.cm.gray)
+    ax[0].set_title('Originales Bild')
     format_img = Cut(img_array)
+    ax[1].imshow(img_array, cmap=plot.cm.gray)
+    ax[1].set_title('Treshholding')
     img_final = transformMatrix(format_img)
+    ax[2].imshow(format_img, cmap=plot.cm.gray)
+    ax[2].set_title('Ziffer ausgeschnitten')
     img_0final = np.reshape(img_final,(28,28))
-    plot.imshow(img_0final, cmap='gray')
+    ax[3].imshow(img_0final, cmap=plot.cm.gray)
+    ax[3].set_title('Herunterskaliert')
+    plot.show()
     return img_final
 
 
