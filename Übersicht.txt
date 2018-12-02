@@ -1,0 +1,18 @@
+In den verschiedenen Ordnern befinden sich die verwendeten Dateien für die Maturaarbeit:
+
+
+Um selber ein Netzwerk zu trainieren wird das Programm neuronalesNetzwerk benötigt. Dort können die Parameter gewählt werden und das Netzwerk trainiert und testet mit den Listen im Ordner Trainingsdaten.
+
+Achtung: Die Gewichtsmatrizen werden direkt in diesem Verzeichnis gespeichert und sollten vor einem erneuten Trainingsdurchlauf verschoben werden, da sie sonst überschrieben werden.
+-------------------------
+Das Programm um die handgeschriebenen Ziffern zu verarbeiten heisst bilderskalieren. Um aber ein eigenes Bild durch das Netzwerk zu lassen, müssen die Parameter im Programm neuronalesNetzwerkabfragen an die Gewichtsmatrix angepasst und eine Bilddatei gewählt werden. Danach kann es ausgeführt werden. Eine Auswahl an guten Gewichtsmatrizen befindet sich im Ordner gewichte.
+-------------------------
+Um die Genauigkeit einer Gewichtsmatrix bezüglich des Testset zu überprüfen, müssen die Parameter im Programm neuronalesNetzwerktesten an die Gewichtsmatrix angepasst werden.
+-------------------------
+Sämtliche Resultate befinden sich in der Excel-Tabelle Resultate KNN.
+-------------------------
+Im Ordner Gewichtsbilder befinden sich die Abbildungen der Gewichtsmatrix, die sich ebenfalls dort befindet. Das Skript zum erstellen der Bilder ist auch dort.
+-------------------------
+Testfotos sind eigene Handgeschriebene Ziffern, die getestet werden können.
+-------------------------
+Die Programme zum Erstellen einiger Darstellungen der Probleme für die Backpropagation befinden sich im Ordner turtle
